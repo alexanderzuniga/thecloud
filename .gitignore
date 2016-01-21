@@ -1,4 +1,5 @@
 *~
+
 .svn
 .cvs
 .git
@@ -18,6 +19,7 @@ uploads*
 *_backup
 gt-cache
 ics-importer-cache
+wp-config.php
 wp-config-sample.php
 wp-content/w3tc*
 wp-content/w3-*
