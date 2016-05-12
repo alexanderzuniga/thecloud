@@ -1,0 +1,3 @@
+[submodule "wp-content/themes/fruitful"]
+	path = wp-content/themes/fruitful
+	url = https://github.com/alexanderzuniga/Fruitful.git
