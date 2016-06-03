@@ -1,8 +1,0 @@
-<?php
-
-
-define: 
-
-something:;
-
-?>
