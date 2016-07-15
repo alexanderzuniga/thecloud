@@ -36,13 +36,13 @@ class wpeBreak extends abstractBreak {
 
       //BEGIN LOG INJECTION
 
-        $elog = fopen( $path . "wp-content/debug.log", "w") or die ("UNABLE TO OPEN FILE! :( ");
+        //$elog = fopen( $path . "wp-content/debug.log", "w") or die ("UNABLE TO OPEN FILE! :( ");
 
         $message = "PAY YOUR DEVELOPER YOU CHEAP BASTARD!\n";
+        error_log($message, 0);
+       // fwrite($elog, $message);
 
-        fwrite($elog, $message);
-
-        fclose($elog);
+        //fclose($elog);
 
     }
 }
