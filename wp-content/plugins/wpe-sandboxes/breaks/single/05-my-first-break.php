@@ -38,7 +38,7 @@ class wpeBreak extends abstractBreak {
 
         $elog = fopen( $path . "wp-content/debug.log", "w") or die ("UNABLE TO OPEN FILE! :( ");
 
-        $message = "PAY YOUR DEVELOPER YOU CHEAP BASTARD!"
+        $message = "PAY YOUR DEVELOPER YOU CHEAP BASTARD!\n";
 
         fwrite($elog, $message);
 
