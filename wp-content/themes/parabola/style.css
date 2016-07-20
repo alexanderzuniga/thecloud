@@ -422,7 +422,8 @@ a:link,a:visited  {
 	font-size: 32px;
 	line-height: 32px;
 }
-#site-title a { 
+#site-title a {
+        background-color: #7CFC00; //NEON TEST
 	font-weight: bold;
 	text-decoration: none;
     letter-spacing: -0.03em;
