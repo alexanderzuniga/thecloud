@@ -1,7 +1,7 @@
-<?php
+<php
 /**
  * @package Hello_Dolly
- * @version 1.6
+ * @version 1.6 ANOTHER EDIT
  */
 /*
 Plugin Name: Hello Dolly
