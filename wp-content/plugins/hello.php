@@ -1,6 +1,6 @@
 <php
 /**
- * @package Hello_Dolly
+ * @package Hello_doy
  * @version 1.6 ANOTHER EDIT
  */
 /*
