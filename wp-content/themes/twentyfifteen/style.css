@@ -91,8 +91,8 @@ html {
 }
 
 body {
-	background: #f1f1f1; #original grey
-        #background: #47BAC8; #wpengine blue
+	#background: #f1f1f1; #original grey
+        background: #47BAC8; #wpengine blue
 }
 
 article,
