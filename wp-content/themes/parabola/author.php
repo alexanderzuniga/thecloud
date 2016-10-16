@@ -12,9 +12,9 @@ get_header(); ?>
 		<section id="container" class="<?php echo parabola_get_layout_class(); ?>">
 			<div id="content" role="main">
 			<?php cryout_before_content_hook(); ?>
-			
+
 			<?php if ( have_posts() ) : ?>
-			
+
 				<?php
 					/* Queue the first post, that way we know
 					 * what author we're dealing with (if that is the case).
@@ -43,12 +43,13 @@ get_header(); ?>
 						<?php echo get_avatar( get_the_author_meta( 'user_email' ), apply_filters( 'parabola_author_bio_avatar_size', 60 ) ); ?>
 					</div><!-- #author-avatar -->
 					<div id="author-description">
-						<h2><?php printf( __( 'About %s', 'parabola' ), get_the_author() ); ?></h2>
+						<h4><?php printf( __( 'About %s', 'parabola' ), get_the_author() ); ?></h4>
 						<?php the_author_meta( 'description' ); ?>
 					</div><!-- #author-description	-->
 				</div><!-- #entry-author-info -->
 				<?php endif; ?>
 
+				<div class="content-masonry">
 				<?php /* Start the Loop */ ?>
 				<?php while ( have_posts() ) : the_post(); ?>
 
@@ -61,6 +62,7 @@ get_header(); ?>
 					?>
 
 				<?php endwhile; ?>
+				</div> <!--content-masonry-->
 
 				<?php if($parabola_pagination=="Enable") parabola_pagination(); else parabola_content_nav( 'nav-below' ); ?>
 
@@ -78,7 +80,7 @@ get_header(); ?>
 				</article><!-- #post-0 -->
 
 			<?php endif; ?>
-			
+
 			<?php cryout_after_content_hook(); ?>
 			</div><!-- #content -->
 		<?php parabola_get_sidebar(); ?>

@@ -30,8 +30,8 @@ foreach ($options as $key => $value) {
 
 		
 		</header><!-- .entry-header -->
-			<?php cryout_post_before_content_hook();  
-			?><?php if ( is_archive() || is_search() ) : // Display excerpts for archives and search. ?>
+			<?php cryout_post_before_content_hook(); ?>  
+			<?php if ( is_archive() || is_search() || is_page() ) : // Display excerpts for archives, search and page templates ?>
 			
 						<?php if ($parabola_excerptarchive != "Full Post" ){ ?>
 						<div class="entry-summary">

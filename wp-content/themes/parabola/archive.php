@@ -33,7 +33,8 @@ get_header(); ?>
 						<?php endif; ?>
 					</h1>
 				</header>
-
+				
+				<div class="content-masonry">
 				<?php /* Start the Loop */ ?>
 				<?php while ( have_posts() ) : the_post(); ?>
 
@@ -46,7 +47,8 @@ get_header(); ?>
 					?>
 
 				<?php endwhile; ?>
-
+				</div> <!--content-masonry-->
+				
 				<?php if($parabola_pagination=="Enable") parabola_pagination(); else parabola_content_nav( 'nav-below' ); ?>
 
 			<?php else : ?>

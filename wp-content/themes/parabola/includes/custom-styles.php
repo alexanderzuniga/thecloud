@@ -2,12 +2,31 @@
 ////////// MASTER CUSTOM STYLE FUNCTION //////////
 
 function parabola_body_classes($classes) {
-	$parabolas= parabola_get_theme_options();
+	$parabolas = parabola_get_theme_options();
 	$classes[] = $parabolas['parabola_image_style'];
 	$classes[] = $parabolas['parabola_caption'];
 	$classes[] = $parabolas['parabola_metaback'];
 
-	if ($parabolas['parabola_magazinelayout'] == "Enable" || (is_front_page() && $parabolas['parabola_frontpage'] == "Enable" && $parabolas['parabola_frontpostsperrow'] == '2')) { $classes[] = 'magazine-layout'; }
+	$magazine_layout = FALSE;
+	if ($parabolas['parabola_magazinelayout'] == "Enable") {
+		if (is_front_page()) {
+			if ( ($parabolas['parabola_frontpage'] == "Enable") && (intval($parabolas['parabola_frontpostsperrow']) == 1) ) { /* no magazine layout */ }
+																											 else { $magazine_layout = TRUE; }
+		} else {
+			$magazine_layout = TRUE;
+		}
+	}
+	if ( is_front_page() && ($parabolas['parabola_frontpage'] == "Enable") && (intval($parabolas['parabola_frontpostsperrow']) == 2) ) { $magazine_layout = TRUE; }
+
+	if ($magazine_layout) $classes[] = 'magazine-layout';
+
+	switch ($parabolas['parabola_menualign']):
+		case "center": $classes[] = 'parabola-menu-center'; break;
+		case "right": $classes[] = 'parabola-menu-right'; break;
+		case "rightmulti": $classes[] = 'parabola-menu-rightmulti'; break;
+		default: $classes[] = 'parabola-menu-left'; break;
+	  endswitch;
+
 	return $classes;
 }
 add_filter('body_class','parabola_body_classes');
@@ -37,8 +56,8 @@ $colPadding = 20;
 #container.two-columns-right #content { width:calc(100% - <?php echo $sidebarSize+$colPadding; ?>px); float:left; }
 #container.two-columns-left #primary { width:<?php echo $sidebarSize; ?>px; float:left; }
 #container.two-columns-left #content { width:<?php echo $contentSize-$colPadding; ?>px; float:right; } /*fallback*/
-#container.two-columns-left #content { 	width:-moz-calc(100% - <?php echo $sidebarSize+$colPadding; ?>px); float:right; 
-										width:-webkit-calc(100% - <?php echo $sidebarSize+$colPadding; ?>px); 
+#container.two-columns-left #content { 	width:-moz-calc(100% - <?php echo $sidebarSize+$colPadding; ?>px); float:right;
+										width:-webkit-calc(100% - <?php echo $sidebarSize+$colPadding; ?>px);
 										width:calc(100% - <?php echo $sidebarSize+$colPadding; ?>px); }
 
 #container.three-columns-right .sidey { width:<?php echo $sidebarSize/2; ?>px; float:left; }
@@ -47,7 +66,7 @@ $colPadding = 20;
 #container.three-columns-right #content { 	width:-moz-calc(100% - <?php echo $sidebarSize+$colPadding*2; ?>px); float:left;
 											width:-webkit-calc(100% - <?php echo $sidebarSize+$colPadding*2; ?>px);
 											width:calc(100% - <?php echo $sidebarSize+$colPadding*2; ?>px);}
-											
+
 #container.three-columns-left .sidey { width:<?php echo $sidebarSize/2; ?>px; float:left; }
 #container.three-columns-left #secondary {margin-left:<?php echo $colPadding; ?>px; margin-right:<?php echo $colPadding; ?>px; }
 #container.three-columns-left #content { width:<?php echo $contentSize-$colPadding*2; ?>px; float:right;} /*fallback*/
@@ -71,13 +90,19 @@ $parabola_googlefontside = str_replace('+',' ',preg_replace('/:.*/i','',$parabol
 $parabola_headingsgooglefont = str_replace('+',' ',preg_replace('/:.*/i','',$parabola_headingsgooglefont));
 $parabola_sitetitlegooglefont = str_replace('+',' ',preg_replace('/:.*/i','',$parabola_sitetitlegooglefont));
 $parabola_menugooglefont = str_replace('+',' ',preg_replace('/:.*/i','',$parabola_menugooglefont));
+$parabola_fontfamily = cryout_fontname_cleanup($parabola_fontfamily);
+$parabola_fonttitle = cryout_fontname_cleanup($parabola_fonttitle);
+$parabola_fontside = cryout_fontname_cleanup($parabola_fontside);
+$parabola_headingsfont = cryout_fontname_cleanup($parabola_headingsfont);
+$parabola_sitetitlefont = cryout_fontname_cleanup($parabola_sitetitlefont);
+$parabola_menufont = cryout_fontname_cleanup($parabola_menufont);
 ?>
 body { font-family: <?php echo ((!$parabola_googlefont)?$parabola_fontfamily:"\"$parabola_googlefont\""); ?>; }
-#content h1.entry-title a, #content h2.entry-title a, #content h1.entry-title , #content h2.entry-title {
+#content h1.entry-title a, #content h2.entry-title a, #content h1.entry-title , #content h2.entry-title, #frontpage .nivo-caption h3, .column-header-image, .column-header-noimage, .columnmore {
 		font-family: <?php echo ((!$parabola_googlefonttitle)?(($parabola_fonttitle == 'General Font')?'inherit':$parabola_fonttitle):"\"$parabola_googlefonttitle\""); ?>; }
 .widget-title, .widget-title a { line-height: normal;
 		font-family: <?php echo ((!$parabola_googlefontside)?(($parabola_fontside == 'General Font')?'inherit':$parabola_fontside):"\"$parabola_googlefontside\"");  ?>;  }
-.entry-content h1, .entry-content h2, .entry-content h3, .entry-content h4, .entry-content h5, .entry-content h6, #comments #reply-title  {
+.entry-content h1, .entry-content h2, .entry-content h3, .entry-content h4, .entry-content h5, .entry-content h6, h3#comments-title, #comments #reply-title  {
 		font-family: <?php echo ((!$parabola_headingsgooglefont)?(($parabola_headingsfont == 'General Font')?'inherit':$parabola_headingsfont):"\"$parabola_headingsgooglefont\"");  ?>; }
 #site-title span a {
 		font-family: <?php echo ((!$parabola_sitetitlegooglefont)?(($parabola_sitetitlefont == 'General Font')?'inherit':$parabola_sitetitlefont):"\"$parabola_sitetitlegooglefont\"");  ?>; }
@@ -116,7 +141,7 @@ a:hover { color: <?php echo $parabola_linkcolorhover; ?>; }
 <?php if (cryout_hex2rgb($parabola_menucolorshadow)): ?>#access ul ul { box-shadow: 3px 3px 0 rgba(<?php echo cryout_hex2rgb($parabola_menucolorshadow); ?>,0.3); }<?php endif; ?>
 
 <?php if ($parabola_topmenucolorbg): ?>
-.topmenu ul li { background-color:  <?php echo $parabola_topmenucolorbg; ?>; } 
+.topmenu ul li { background-color:  <?php echo $parabola_topmenucolorbg; ?>; }
 <?php endif; ?>
 .topmenu ul li a { color: <?php echo $parabola_topmenucolortxt; ?>; }
 .topmenu ul li a:before { border-color: <?php echo $parabola_accentcolora; ?> transparent transparent transparent; }
@@ -124,14 +149,15 @@ a:hover { color: <?php echo $parabola_linkcolorhover; ?>; }
 .topmenu ul li a:hover { color: <?php echo $parabola_topmenucolortxthover; ?>; background-color: <?php echo $parabola_topmenucolorbghover; ?>; }
 
 div.post, div.page, div.hentry, div.product, div[class^='post-'],
-#comments, .comments, .column-text, .column-image, #srights, #slefts, #frontpage blockquote, .page-title, .page-header, article.post, article.page, article.hentry,
-.contentsearch, #author-info, #nav-below, .yoyo > li
+#comments, .comments, .column-text, .column-image, #srights, #slefts, #front-text3, #front-text4, .page-title, .page-header, article.post, article.page, article.hentry,
+.contentsearch, #author-info, #nav-below, .yoyo > li, .woocommerce #mainwoo
      { background-color: <?php echo $parabola_contentcolorbg; ?>; }
-div.post, div.page, div.hentry, .sidey .widget-container, #comments, .commentlist .comment-body, article.post, article.page, article.hentry, #nav-below, .page-header, .yoyo > li
+div.post, div.page, div.hentry, .sidey .widget-container, #comments, .commentlist .comment-body, article.post, article.page, article.hentry, #nav-below, .page-header, .yoyo > li,
+#front-text3, #front-text4
      { border-color: <?php echo $parabola_accentcolorc; ?>; }
 #author-info, #entry-author-info { border-color: <?php echo $parabola_accentcolore; ?>; }
 #entry-author-info #author-avatar, #author-info #author-avatar { border-color: <?php echo $parabola_accentcolorc; ?>; }
-<?php if (cryout_hex2rgb($parabola_accentcolorb)): ?>article.sticky { box-shadow:0 0 1px rgba(<?php echo cryout_hex2rgb($parabola_accentcolorb); ?>,1) inset; border-color:<?php echo $parabola_contentcolorbg ;?>} <?php endif; ?>
+<?php if (cryout_hex2rgb($parabola_accentcolorb)): ?>article.sticky:hover { border-color: rgba(<?php echo cryout_hex2rgb($parabola_accentcolorb); ?>,.6); } <?php endif; ?>
 
 .sidey .widget-container { color: <?php echo $parabola_sidetxt; ?>; background-color: <?php echo $parabola_sidebg; ?>; }
 .sidey .widget-title { color: <?php echo $parabola_sidetitletxt; ?>; background-color: <?php echo $parabola_sidetitlebg; ?>; }
@@ -139,7 +165,7 @@ div.post, div.page, div.hentry, .sidey .widget-container, #comments, .commentlis
 
 .entry-content h1, .entry-content h2, .entry-content h3, .entry-content h4, .entry-content h5, .entry-content h6 {
      color: <?php echo $parabola_contentcolortxtheadings; ?>; }
-.entry-title, .entry-title a { color: <?php echo $parabola_contentcolortxttitle; ?>; }
+.entry-title, .entry-title a, .page-title { color: <?php echo $parabola_contentcolortxttitle; ?>; }
 .entry-title a:hover { color: <?php echo $parabola_contentcolortxttitlehover; ?>; }
 #content h3.entry-format { color: <?php echo $parabola_menucolortxtdefault; ?>; background-color: <?php echo $parabola_menucolorbgdefault; ?>; border-color: <?php echo $parabola_menucolorbgdefault; ?>; }
 #content h3.entry-format { color: <?php echo $parabola_menucolortxtdefault; ?>; background-color: <?php echo $parabola_menucolorbgdefault; ?>; border-color: <?php echo $parabola_menucolorbgdefault; ?>; }
@@ -159,21 +185,20 @@ div.post, div.page, div.hentry, .sidey .widget-container, #comments, .commentlis
 
 .footermenu ul li a:after { border-color: transparent transparent <?php echo $parabola_accentcolora; ?> transparent; }
 
-a.continue-reading-link { color:<?php echo $parabola_menucolortxtdefault; ?> !important; background:<?php echo $parabola_menucolorbgdefault; ?>; border-color:#<?php echo $parabola_accentcolorc; ?>; }
+a.continue-reading-link { color:<?php echo $parabola_menucolortxtdefault; ?> !important; background:<?php echo $parabola_menucolorbgdefault; ?>; border-color:<?php echo $parabola_accentcolorc; ?>; }
 a.continue-reading-link:hover { background-color:<?php echo $parabola_accentcolora; ?>; }
 
-.file, .button, #respond .form-submit input#submit {
-	background-color: <?php echo $parabola_contentcolorbg; ?>;
-	border-color: <?php echo $parabola_accentcolord; ?>;
-    box-shadow: 0 -10px 10px 0 <?php echo $parabola_accentcolore; ?> inset; }
-.file:hover, .button:hover, #respond .form-submit input#submit:hover {
-	background-color: <?php echo $parabola_accentcolore; ?>; }
+.button, #respond .form-submit input#submit {
+	background-color: <?php echo $parabola_accentcolore; ?>;
+	border-color: <?php echo $parabola_accentcolorc; ?>; }
+.button:hover, #respond .form-submit input#submit:hover {
+	border-color: <?php echo $parabola_accentcolord; ?>; }
 .entry-content tr th, .entry-content thead th {
 	color: <?php echo $parabola_contentcolorbg; ?>;
 	background-color: <?php echo $parabola_contentcolortxtheadings; ?>; }
 .entry-content fieldset, #content tr td { border-color: <?php echo $parabola_accentcolord; ?>; }
 hr { background-color: <?php echo $parabola_accentcolord; ?>; }
-input[type="text"], input[type="password"], input[type="email"], input[type="file"], textarea, select,
+input[type="text"], input[type="password"], input[type="email"], textarea, select,
 input[type="color"],input[type="date"],input[type="datetime"],input[type="datetime-local"],input[type="month"],input[type="number"],input[type="range"],
 input[type="search"],input[type="tel"],input[type="time"],input[type="url"],input[type="week"] {
 	background-color: <?php echo $parabola_accentcolore; ?>;
@@ -181,9 +206,8 @@ input[type="search"],input[type="tel"],input[type="time"],input[type="url"],inpu
 	color: <?php echo $parabola_contentcolortxt; ?>; }
 input[type="submit"], input[type="reset"] {
 	color: <?php echo $parabola_contentcolortxt; ?>;
-	background-color: <?php echo $parabola_contentcolorbg; ?>;
-	border-color: <?php echo $parabola_accentcolord; ?>;
-	box-shadow: 0 -10px 10px 0 <?php echo $parabola_accentcolore; ?> inset; }
+	background-color: <?php echo $parabola_accentcolore; ?>;
+	border-color: <?php echo $parabola_accentcolorc; ?>;}
 input[type="text"]:hover, input[type="password"]:hover, input[type="email"]:hover, textarea:hover,
 input[type="color"]:hover, input[type="date"]:hover, input[type="datetime"]:hover, input[type="datetime-local"]:hover, input[type="month"]:hover, input[type="number"]:hover, input[type="range"]:hover,
 input[type="search"]:hover, input[type="tel"]:hover, input[type="time"]:hover, input[type="url"]:hover, input[type="week"]:hover {
@@ -205,25 +229,16 @@ span.edit-link {
 .meta-accented .entry-meta span, .meta-accented .entry-utility span.bl_posted {
 	background-color: <?php echo $parabola_accentcolorc; ?>;
 	border-color: <?php echo $parabola_accentcolore; ?>; }
-.comment-meta a { color: <?php echo $parabola_contentcolortxt; ?>; }
+.comment-meta a { color: <?php echo $parabola_contentcolortxtlight; ?>; }
 .comment-author { background-color: <?php echo $parabola_accentcolore; ?>; }
 .comment-details:after { border-color: transparent transparent transparent <?php echo $parabola_accentcolore; ?>; }
+.comment:hover > div > .comment-author { background-color: <?php echo $parabola_accentcolorc; ?>; }
+.comment:hover > div > .comment-author .comment-details:after { border-color: transparent transparent transparent <?php echo $parabola_accentcolorc; ?>; }
 #respond .form-allowed-tags { color: <?php echo $parabola_contentcolortxtlight; ?>; }
-.reply a { background-color: <?php echo $parabola_accentcolore; ?>; border-color: <?php echo $parabola_accentcolorc; ?>; }
-.reply a:hover { background-color: <?php echo $parabola_menucolorbgdefault; ?>;color: <?php echo $parabola_linkcolortext; ?>; }
+.reply a { border-color: <?php echo $parabola_accentcolorc; ?>;   color: <?php echo $parabola_contentcolortxt; ?>;}
+.reply a:hover { background-color: <?php echo $parabola_accentcolorc; ?> }
 
-.nav-next a:hover {
- background:-moz-linear-gradient(left,  <?php echo $parabola_contentcolorbg; ?>, <?php echo $parabola_accentcolore; ?>);
- background:-webkit-linear-gradient(left,  <?php echo $parabola_contentcolorbg; ?>, <?php echo $parabola_accentcolore; ?>);
- background:-ms-linear-gradient(left,  <?php echo $parabola_contentcolorbg; ?>, <?php echo $parabola_accentcolore; ?>);
- background:-o-linear-gradient(left,  <?php echo $parabola_contentcolorbg; ?>, <?php echo $parabola_accentcolore; ?>);
- background:linear-gradient(left,  <?php echo $parabola_contentcolorbg; ?>, <?php echo $parabola_accentcolore; ?>); }
-.nav-previous a:hover {
- background: -moz-linear-gradient(left, <?php echo $parabola_accentcolore; ?>,  <?php echo $parabola_contentcolorbg; ?>);
- background: -webkit-linear-gradient(left, <?php echo $parabola_accentcolore; ?>,  <?php echo $parabola_contentcolorbg; ?>);
- background: -ms-linear-gradient(left, <?php echo $parabola_accentcolore; ?>,  <?php echo $parabola_contentcolorbg; ?>);
- background: -o-linear-gradient(left, <?php echo $parabola_accentcolore; ?>,  <?php echo $parabola_contentcolorbg; ?>);
- background: linear-gradient(left, <?php echo $parabola_accentcolore; ?>,  <?php echo $parabola_contentcolorbg; ?>); }
+.nav-next a:hover, .nav-previous a:hover {background: <?php echo $parabola_accentcolore; ?>}
 .pagination .current { font-weight: bold; }
 .pagination span, .pagination a { background-color: <?php echo $parabola_contentcolorbg; ?>; }
 .pagination a:hover { background-color: <?php echo $parabola_menucolorbgdefault; ?>;color:<?php echo $parabola_linkcolortext; ?>}
@@ -246,11 +261,11 @@ span.edit-link {
 <?php
 ////////// LAYOUT //////////
 ?>
-#content p, #content ul, #content ol, #content, #frontpage blockquote { text-align:<?php echo $parabola_textalign;  ?> ; }
-#content p, #content ul, #content ol, .sidey, .sidey a, table, table td {
+#content p, #content ul, #content ol, #content, #front-text3, #front-text4 { text-align:<?php echo $parabola_textalign;  ?> ; }
+body {
                                 font-size:<?php echo $parabola_fontsize ?>;
 								word-spacing:<?php echo $parabola_wordspace ?>; letter-spacing:<?php echo $parabola_letterspace ?>; }
-#content p, #content ul, #content ol, .sidey, .sidey a { line-height:<?php echo $parabola_lineheight ?>; }
+body { line-height:<?php echo $parabola_lineheight ?>; }
 <?php if ($parabola_uppercasetext==0): ?> #site-title a, #site-description, #access a, .topmenu ul li a, .footermenu a, .entry-meta span, .entry-utility span, #content h3.entry-format,
 span.edit-link, h3#comments-title, h3#reply-title, .comment-author cite, .reply a, .widget-title, #site-info a, .nivo-caption h2, a.continue-reading-link,
 .column-image h3, #front-columns h3.column-header-noimage, .tinynav, .page-link  { text-transform: none; }<?php endif; ?>
@@ -281,9 +296,8 @@ endfor; ?>
 <?php } ?>
 <?php if ($parabola_headingsindent == "Enable") { ?>
 		#content h1, #content h2, #content h3, #content h4, #content h5, #content h6 { margin-left:20px;}
-		.sticky hgroup { padding-left: 15px;}
 <?php } ?>
-#header-container > div { margin:<?php echo $parabola_headermargintop; ?>px 0 0 <?php echo $parabola_headermarginleft; ?>px;}
+#header-container > div:first-child { margin:<?php echo $parabola_headermargintop; ?>px 0 0 <?php echo $parabola_headermarginleft; ?>px;}
 <?php if ($parabola_pagetitle == "Hide") { ?> .page h1.entry-title, .home .page h2.entry-title { display:none; } <?php } ?>
 <?php if ($parabola_categtitle == "Hide") { ?> header.page-header, .archive h1.page-title { display:none; }  <?php } ?>
 <?php if ($parabola_postcomlink == "Hide") { ?>article.post .comments-link { display:none; } <?php } ?>
@@ -291,24 +305,41 @@ endfor; ?>
 <?php if ($parabola_postcateg == "Hide") { ?>.entry-meta span.bl_categ { display:none; } <?php } ?>
 <?php if ($parabola_posttag == "Hide") { ?> .entry-meta .footer-tags, .entry-utility .footer-tags { display:none; } <?php } ?>
 <?php if ($parabola_postbook == "Hide") { ?> .entry-utility span.bl_bookmark { display:none; } <?php } ?>
-#content p, #content ul, #content ol, #content dd, #content pre, #content hr { margin-bottom: <?php echo $parabola_paragraphspace;?>; } 
+#content p, #content ul, #content ol, #content dd, #content pre, #content hr { margin-bottom: <?php echo $parabola_paragraphspace;?>; }
 <?php if ($parabola_parindent != "0px") { ?> #content p { text-indent:<?php echo $parabola_parindent;?>;} <?php } ?>
 <?php if ($parabola_postmetas == "Hide") { ?> #content div.entry-meta { display:none; } <?php } ?>
 <?php if ($parabola_triangles == 0) { ?>
 	.topmenu ul li a:before, #access > .menu > ul > li > a:after, #access > .menu > ul ul:after,
 	.widget-title:after, .footermenu ul li a:after	{ display: none; } <?php }; ?>
-<?php switch ($parabola_menualign): 
-		case "center": ?> #access > .menu > ul { display: table; margin: 0 auto; } <?php break;
+<?php /*switch ($parabola_menualign):
+		case "center": ?> #access > .menu > ul { display: table; margin: 0 auto; text-align: center; } #access > .menu > ul > li { display: inline-block; float: initial; }
+			              #access > .menu > ul > * { text-align: initial; } <?php break;
 		case "right": ?> #access > .menu > ul { float: right; } <?php break;
 		case "rightmulti": ?> #access ul li { float: right; } <?php break;
-		default: break; 
-	  endswitch; ?>
+		default: break;
+	  endswitch;*/ ?>
 #header-widget-area { width: <?php echo $parabola_headerwidgetwidth; ?>; }
 <?php
 ////////// HEADER IMAGE //////////
 ?>
 #branding { height:<?php echo HEADER_IMAGE_HEIGHT; ?>px; }
-<?php if ($parabola_hratio) { ?> @media (max-width: 1920px) {#branding, #bg_image { height:auto; max-width:100%; min-height:inherit !important; } }	<?php } ?>
+<?php if ($parabola_hratio) { ?> @media (max-width: 1920px) {#branding, #bg_image { height:auto; max-width:100%; min-height:inherit !important; } }	<?php }?>
+<?php
+//////// RESPONSIVENESS ////////
+?>
+@media (max-width: 800px) {
+	#content h1.entry-title, #content h2.entry-title { font-size:<?php echo absint($parabola_headfontsize)*0.95; ?>px ; }
+	#site-title span a { font-size:<?php echo absint($parabola_sitetitlesize)*.9; ?>px;}
+
+}
+@media (max-width: 650px) {
+	#content h1.entry-title, #content h2.entry-title {font-size:<?php echo absint($parabola_headfontsize)*0.9; ?>px ;}
+	#site-title span a { font-size:<?php echo absint($parabola_sitetitlesize)*.8; ?>px;}
+}
+
+@media (max-width: 480px) {
+	#site-title span a { font-size:<?php echo absint($parabola_sitetitlesize)*.6; ?>px;}
+}
 </style>
 <?php
 	$parabola_custom_styling = ob_get_contents();

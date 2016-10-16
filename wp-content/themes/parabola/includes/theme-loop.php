@@ -17,7 +17,7 @@
  */
 function parabola_excerpt_length( $length ) {
 	global $parabola_excerptwords;
-	return $parabola_excerptwords;
+	return  absint( $parabola_excerptwords );
 }
 add_filter( 'excerpt_length', 'parabola_excerpt_length' );
 
@@ -29,7 +29,7 @@ add_filter( 'excerpt_length', 'parabola_excerpt_length' );
  */
 function parabola_continue_reading_link() {
 	global $parabola_excerptcont;
-	return ' <a class="continue-reading-link" href="'. get_permalink() . '">' .$parabola_excerptcont.'</a>';
+	return ' <a class="continue-reading-link" href="'. esc_url( get_permalink() ) . '">'  . wp_kses_post( $parabola_excerptcont ) . '</a>';
 }
 
 /**
@@ -43,7 +43,7 @@ function parabola_continue_reading_link() {
  */
 function parabola_auto_excerpt_more( $more ) {
 	global $parabola_excerptdots;
-	return $parabola_excerptdots. parabola_continue_reading_link();
+	return wp_kses_post( $parabola_excerptdots ) . parabola_continue_reading_link();
 }
 add_filter( 'excerpt_more', 'parabola_auto_excerpt_more' );
 
@@ -77,7 +77,7 @@ add_filter( 'get_the_excerpt', 'parabola_custom_excerpt_more' );
  */
 function parabola_more_link($more_link, $more_link_text) {
 	global $parabola_excerptcont;
-	$new_link_text = $parabola_excerptcont;
+	$new_link_text = wp_kses_post( $parabola_excerptcont );
 	if (preg_match("/custom=(.*)/",$more_link_text,$m) ) {
 		$new_link_text = $m[1];
 	};
@@ -98,6 +98,9 @@ function parabola_trim_excerpt($text) {
      global $parabola_excerptwords;
      global $parabola_excerptcont;
      global $parabola_excerptdots;
+     $parabola_excerptwords = absint( $parabola_excerptwords );
+     $parabola_excerptcont = wp_kses_post( $parabola_excerptcont );
+     $parabola_excerptdots = wp_kses_post( $parabola_excerptdots );
      $raw_excerpt = $text;
      if ( '' == $text ) {
          //Retrieve the post content.
@@ -154,33 +157,33 @@ function parabola_posted_on() {
      foreach ($parabolas as $key => $value) { ${"$key"} = $value; }
 
      // If author is hidden don't give it a value
-     $author_string = sprintf( '<span class="author vcard" >'.__( 'By ','parabola'). ' <a class="url fn n" href="%1$s" title="%2$s">%3$s</a> <span class="bl_sep">&#8226;</span></span>',
-     		get_author_posts_url( get_the_author_meta( 'ID' ) ),
-			sprintf( esc_attr__( 'View all posts by %s', 'parabola' ), get_the_author() ),
-			get_the_author()
-	);
-     if ($parabola_postauthor == "Hide")  $author_string='';
+    $author_string = sprintf( '<span class="author vcard" >'.__( 'By ','parabola'). ' <a class="url fn n" rel="author" href="%1$s" title="%2$s">%3$s</a></span>',
+    			esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ),
+    			sprintf( esc_attr__( 'View all posts by %s', 'parabola' ), get_the_author() ),
+    			get_the_author()
+    		);
 
      // Post date/time option
-     $date_string='<span class="onDate"> %3$s </span>';
+     $date_string='<span><time class="onDate date published" datetime="' . get_the_time( 'c' ) . '"> %3$s </time></span>' .
+                    '<time class="updated"  datetime="' . get_the_modified_date( 'c' ) . '">' . get_the_modified_date() . '</time>';
      switch($parabola_postdatetime){
           case "date":
-               $parabola_formatted_datetime = sprintf( '<a href="%1$s" rel="bookmark">%2$s</a>', get_permalink(), get_the_date() ); break;
+               $parabola_formatted_datetime = sprintf( '<a href="%1$s" rel="bookmark">%2$s</a>', esc_url( get_permalink() ), get_the_date() ); break;
           case "time":
-               $parabola_formatted_datetime = sprintf( '<a href="%1$s" rel="bookmark"> %2$s</a>', get_permalink(), esc_attr( get_the_time() ) ); break;
+               $parabola_formatted_datetime = sprintf( '<a href="%1$s" rel="bookmark"> %2$s</a>', esc_url( get_permalink() ), esc_attr( get_the_time() ) ); break;
           case "hide":
                $parabola_formatted_datetime = "";$date_string = ""; break;
           case "datetime":
           default:
-               $parabola_formatted_datetime = sprintf( '<a href="%1$s" rel="bookmark">%3$s - %2$s</a>', get_permalink(), esc_attr( get_the_time() ), get_the_date() );
+               $parabola_formatted_datetime = sprintf( '<a href="%1$s" rel="bookmark">%3$s - %2$s</a>', esc_url( get_permalink() ), esc_attr( get_the_time() ), get_the_date() );
      } // switch
 
      // Print the meta data
 	printf( '&nbsp; %4$s '.$date_string.' <span class="bl_categ"> %2$s </span>  ',
-		'meta-prep meta-prep-author',
-		get_the_category_list( ', ' ),
-		$parabola_formatted_datetime,
-          $author_string
+        'meta-prep meta-prep-author',
+        get_the_category_list( ', ' ),
+        $parabola_formatted_datetime,
+        $author_string
 	);
 }; // parabola_posted_on()
 endif;
@@ -238,7 +241,7 @@ function parabola_posted_in() {
 		$posted_in,
 		get_the_category_list( ', ' ),
 		$tag_list,
-		get_permalink(),
+		esc_url( get_permalink() ),
 		the_title_attribute( 'echo=0' )
 	);
 }; // parabola_posted_in()
@@ -264,15 +267,14 @@ if ($parabola_fcrop) add_image_size( 'custom', $parabola_fwidth, $parabola_fheig
                 else add_image_size( 'custom', $parabola_fwidth, $parabola_fheight );
 
 
-function cryout_echo_first_image ($postID)
-{
+function cryout_echo_first_image ($postID) {
 	$args = array(
-	'numberposts' => 1,
-	'orderby'=> 'none',
-	'post_mime_type' => 'image',
-	'post_parent' => $postID,
-	'post_status' => 'any',
-	'post_type' => 'any'
+    	'numberposts' => 1,
+    	'orderby'=> 'none',
+    	'post_mime_type' => 'image',
+    	'post_parent' => $postID,
+    	'post_status' => 'any',
+    	'post_type' => 'any'
 	);
 
 	$attachments = get_children( $args );
@@ -282,7 +284,7 @@ function cryout_echo_first_image ($postID)
 		foreach($attachments as $attachment) {
 			$image_attributes = wp_get_attachment_image_src( $attachment->ID, 'custom' )  ? wp_get_attachment_image_src( $attachment->ID, 'custom' ) : wp_get_attachment_image_src( $attachment->ID, 'custom' );
 
-			return $image_attributes[0];
+			return esc_attr( $image_attributes[0] );
 
 		}
 	}
@@ -295,24 +297,24 @@ if ( ! function_exists( 'parabola_set_featured_thumb' ) ) :
 function parabola_set_featured_thumb() {
 	global $parabolas;
 	foreach ($parabolas as $key => $value) { ${"$key"} = $value; }
-     global $post;
+    global $post;
 
-     $image_src = cryout_echo_first_image($post->ID);
-     if ( function_exists("has_post_thumbnail") && has_post_thumbnail() && $parabola_fpost=='Enable')
-			the_post_thumbnail( 'custom', array("class" => "align".strtolower($parabola_falign)." post_thumbnail" ) );
-	else if ($parabola_fpost=='Enable' && $parabola_fauto=="Enable" && $image_src )
-			echo '<a title="'.the_title_attribute('echo=0').'" href="'.get_permalink().'" ><img width="'.$parabola_fwidth.'" title="" alt="" class="align'.strtolower($parabola_falign).' post_thumbnail" src="'.$image_src.'"></a>' ;
+    $image_src = cryout_echo_first_image( $post->ID );
+    if ( function_exists("has_post_thumbnail") && has_post_thumbnail() && $parabola_fpost == 'Enable')
+        the_post_thumbnail( 'custom', array("class" => "align" . strtolower($parabola_falign) . " post_thumbnail" ) );
+    else if ($parabola_fpost == 'Enable' && $parabola_fauto == "Enable" && $image_src )
+        echo '<a title="'.the_title_attribute('echo=0').'" href="' . esc_url( get_permalink() ).'" ><img width="'.$parabola_fwidth.'" title="" alt="" class="align' . strtolower($parabola_falign) . ' post_thumbnail" src="' . $image_src . '"></a>' ;
 
 };
 endif; // parabola_set_featured_thumb
 
-if ($parabola_fpost=='Enable' && $parabola_fpostlink) add_filter( 'post_thumbnail_html', 'parabola_thumbnail_link', 10, 3 );
+if ($parabola_fpost == 'Enable' && $parabola_fpostlink) add_filter( 'post_thumbnail_html', 'parabola_thumbnail_link', 10, 2 );
 
 /**
  * The thumbnail gets a link to the post's page
  */
-function parabola_thumbnail_link( $html, $post_id, $post_image_id ) {
-     $html = '<a href="' . get_permalink( $post_id ) . '" title="' . esc_attr( get_post_field( 'post_title', $post_id ) ) . '" alt="' . esc_attr( get_post_field( 'post_title', $post_id ) ) . '">' . $html . '</a>';
+function parabola_thumbnail_link( $html, $post_id ) {
+     $html = '<a href="' . esc_url( get_permalink( $post_id ) ) . '" title="' . esc_attr( get_post_field( 'post_title', $post_id ) ) . '">' . $html . '</a>';
      return $html;
 }; // parabola_thumbnail_link()
 

@@ -19,6 +19,7 @@ foreach ($parabolas as $key => $value) { ${"$key"} = $value; }
 
 			if ( have_posts() ) :
 
+				?> <div class="content-masonry"> <?php
 				/* Start the Loop */
 				$the_query = new WP_Query( array('posts_per_page'=>$parabolas['parabola_frontpostscount']) );
 				while ( $the_query->have_posts() ) : $the_query->the_post();
@@ -27,6 +28,7 @@ foreach ($parabolas as $key => $value) { ${"$key"} = $value; }
 					get_template_part( 'content/content', get_post_format() );
 
 				endwhile;
+				?> </div> <!--content-masonry--> <?php
 
 				//if($parabola_pagination=="Enable") parabola_pagination(); else parabola_content_nav( 'nav-below' );
 

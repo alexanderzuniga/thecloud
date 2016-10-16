@@ -146,6 +146,21 @@ function cryout_setting_sidewidth_fn() {
 
 <?php } // cryout_setting_sidewidth_fn()
 
+//CHECKBOX - Name: parabola_settings[magazinelayout]
+function cryout_setting_magazinelayout_fn() {
+	global $parabolas;
+	$items = array ("Enable" , "Disable");
+	$itemsare = array( __("Enable","parabola"), __("Disable","parabola"));
+	echo "<select id='parabola_magazinelayout' name='parabola_settings[parabola_magazinelayout]'>";
+	foreach($items as $id=>$item) {
+		echo "<option value='$item'";
+		selected($parabolas['parabola_magazinelayout'],$item);
+		echo ">$itemsare[$id]</option>";
+	}
+	echo "</select>";
+	echo "<div><small>".__("Enable the Magazine Layout. This layout applies to pages with posts and shows 2 posts per row.","parabola")."</small></div>";
+}
+
 //CHECKBOX - Name: parabola_settings[mobile]
 function cryout_setting_mobile_fn() {
 	global $parabolas;
@@ -159,7 +174,7 @@ function cryout_setting_mobile_fn() {
 	}
 	echo "</select>";
 	echo " <label id='parabola_zoom' for='parabola_zoom' class='socialsdisplay'><input "; checked($parabolas['parabola_zoom'],'1');
-	echo " value='1' id='parabola_zoom' name='parabola_settings[parabola_zoom]' type='checkbox' /> ".__('Allow zoom', 'parabola')." </label>";	
+	echo " value='1' id='parabola_zoom' name='parabola_settings[parabola_zoom]' type='checkbox' /> ".__('Allow zoom', 'parabola')." </label>";
 	echo "<div><small>".__("Enable to make Parabola fully responsive. The layout and general sizes of your blog will adjust depending on what device and what resolution it is viewed in.<br> Do not disable unless you have a good reason to.","parabola")."</small></div>";
 } // cryout_setting_mobile_fn()
 
@@ -181,6 +196,9 @@ function cryout_setting_frontpage_fn() {
 	}
 	echo "</select>";
 	echo "<div><small>".__("Enable the presentation front-page. This will become your new home page. <br> If you want another page to hold your latest blog posts, choose 'Blog Template (Posts Page)' from Page Templates while creating or editing that page.","parabola")."</small></div>";
+	if ($parabolas['parabola_frontpage'] == 'Enable' && get_option('show_on_front') != 'posts') {
+		printf ( '<div class="slmini" style="color:#cb5920;">'.__('You have enabled the Presentation Page but your WordPress\' <em>Front page displays</em> option is set to use a static page. WordPress guidelines require that the static page option have priority over theme options.<br> Go to %1$s and set the <em>Front page displays</em> option to <em><strong>Your latest posts</strong></em> to display the Presentation Page.',"parabola").'</div>', '<a href="/wp-admin/options-reading.php" > Settings &raquo; Reading</a>');
+	};
 } // cryout_setting_frontpage_fn()
 
 function cryout_setting_frontposts_fn() {
@@ -194,13 +212,13 @@ function cryout_setting_frontposts_fn() {
 		echo ">$itemsare[$id]</option>";
 	}
 	echo "</select>";
-	
+
 	echo "<div class='slmini'><b>".__("Show:","parabola")."</b> ";
 	echo "<input type='text' id='parabola_frontpostscount' name='parabola_settings[parabola_frontpostscount]' size='3' value='";
  	echo $parabolas['parabola_frontpostscount']."'> ".__('posts','parabola');
 	echo "<div><small>".__("Enable to display latest posts on the presentation page, below the columns. Sticky posts are always displayed and not counted.","parabola")."</small></div><br>";
 	echo "</div>";
-	
+
 	echo "<div class='slmini'><b>".__("Posts per row:","parabola")."</b> ";
 	$items = array ("1", "2");
 	echo "<select id='parabola_frontpostsperrow' name='parabola_settings[parabola_frontpostsperrow]'>";
@@ -215,6 +233,10 @@ function cryout_setting_frontposts_fn() {
 //CHECKBOX - Name: parabola_settings[frontslider]
 function cryout_setting_frontslider_fn() {
 	global $parabolas;
+
+	echo "<div class='slmini'><b>".__("Slider and Columns Border:","parabola")."</b> ";
+	echo "<input id='parabola_fpborderwidth' name='parabola_settings[parabola_fpborderwidth]' size='4' type='text' value='".esc_attr( $parabolas['parabola_fpborderwidth'] )."' /> ".__("px","parabola");
+	echo "<small>".__("Width for the slider and columns border. Set to zero when border and background color are too similar.","parabola")."</small></div>";
 
 	echo "<div class='slmini'><b>".__("Slider Dimensions:","parabola")."</b> ";
 	echo "<input id='parabola_fpsliderwidth' name='parabola_settings[parabola_fpsliderwidth]' size='4' type='text' value='".esc_attr( $parabolas['parabola_fpsliderwidth'] )."' /> px (".__("width","parabola").") <strong>X</strong> ";
@@ -421,11 +443,106 @@ function cryout_setting_frontslider2_fn() {
 <?php
 } // cryout_setting_frontslider2_fn()
 
-//CHECKBOX - Name: parabola_settings[frontcolumns]
+// parabola_settings[frontcolumns]
 function cryout_setting_frontcolumns_fn() {
 	global $parabolas;
 
-	echo "<div class='slmini'><b>".__("Number of columns:","parabola")."</b> ";
+	echo "<div class='slmini'>";
+	$items = array("Custom Columns", "Widget Columns", "Latest Posts", "Random Posts", "Sticky Posts", "Latest Posts from Category" , "Random Posts from Category", "Specific Posts", "Disabled");
+	$itemsare = array( __("Custom Columns",'parabola'), __("Widget Columns","parabola"), __("Latest Posts","parabola"), __("Random Posts","parabola"),__("Sticky Posts","parabola"), __("Latest Posts from Category","parabola"), __("Random Posts from Category","parabola"), __("Specific Posts","parabola"), __("Disabled","parabola"));
+	echo __("<strong>Columns content:</strong>","parabola");
+	echo "<select id='parabola_columnType' name='parabola_settings[parabola_columnType]'>";
+	foreach($items as $id=>$item) {
+		echo "<option value='$item'";
+		selected($parabolas['parabola_columnType'],$item);
+		echo ">$itemsare[$id]</option>";
+	}
+	echo "</select>";
+	echo "<div><small>".__("Only the columns with a defined image will become active and visible on the presentation page.<br>When using columns from posts, make sure the selected posts have featured images.<br>Read the FAQs for more info.","parabola")."</small></div>";
+     ?>
+
+
+
+     <div class="underSelector">
+		<div id="columnCustom" class="columnDivs">
+			<span><?php _e('Custom columns are limited to a maximum of 4.','parabola'); ?> </span>
+			<?php for ($i=1;$i<=4;$i++): // custom column fields ?>
+			 <div class="slidebox">
+				  <h4 class="slidetitle" > <?php _e("Column","parabola");?> <?php echo $i; ?></h4>
+				  <div class="slidercontent">
+					   <h5><?php _e("Image","parabola");?></h5>
+					   <input type="text" value="<?php echo esc_url($parabolas['parabola_columnimg'.$i]); ?>" name="parabola_settings[parabola_columnimg<?php echo $i; ?>]"
+							id="parabola_columnimg<?php echo $i; ?>" class="slideimages" />
+					   <span class="description"><a href="#" class="upload_image_button button"><?php _e( 'Select / Upload Image', 'parabola' );?></a> </span>
+					   <h5> <?php _e("Title","parabola");?> </h5>
+					   <input id='parabola_columntitle<?php echo $i; ?>' name='parabola_settings[parabola_columntitle<?php echo $i; ?>]' size='50' type='text'
+							value='<?php echo esc_attr( $parabolas['parabola_columntitle'.$i] ) ?>' />
+					   <h5> <?php _e("Text","parabola");?> </h5>
+					   <textarea id='parabola_columntext<?php echo $i; ?>' name='parabola_settings[parabola_columntext<?php echo $i; ?>]' rows='3' cols='50'
+							type='textarea'><?php echo esc_attr($parabolas['parabola_columntext'.$i]) ?></textarea>
+					   <h5> <?php _e("Link","parabola");?> </h5>
+					   <input id='parabola_columnlink<?php echo $i; ?>' name='parabola_settings[parabola_columnlink<?php echo $i; ?>]' size='50' type='text'
+							value='<?php echo esc_url( $parabolas['parabola_columnlink'.$i] ) ?>' />
+				  </div>
+			 </div>
+			 <?php endfor;  ?>
+		</div>
+
+          <div id="columnLatestPosts" class="columnDivs">
+               <span><?php _e('Latest posts will be loaded into the columns.','parabola'); ?> </span>
+          </div>
+
+          <div id="columnRandomPosts" class="columnDivs">
+               <span><?php _e('Random posts will be loaded into the columns.','parabola'); ?> </span>
+          </div>
+
+          <div id="columnLatestCateg" class="columnDivs">
+               <span><?php _e('Latest posts from the category you choose will be loaded in the columns.','parabola'); ?> </span>
+          </div>
+
+          <div id="columnRandomCateg" class="columnDivs">
+               <span><?php _e('Random posts from the category you choose will be loaded into the columns.','parabola'); ?> </span>
+          </div>
+
+          <div id="columnStickyPosts" class="columnDivs">
+               <span><?php _e('Only sticky posts will be loaded into the columns.','parabola'); ?> </span>
+          </div>
+
+          <div id="columnSpecificPosts" class="columnDivs">
+               <span><?php _e('List the post IDs you want to display (separated by a comma): ','parabola'); ?> </span>
+               <input id='parabola_columnSpecific' name='parabola_settings[parabola_columnSpecific]' size='44' type='text' value='<?php echo esc_attr( $parabolas['parabola_columnSpecific'] ) ?>' />
+          </div>
+
+		  <div id="columnWidgets" class="columnDivs">
+			  <span><?php _e('Load your custom Widgets as columns. Go to <a>Appearance >> Widgets</a> and create your custom columns using the Columns widget. You can use as many as you want.','parabola'); ?> </span>
+          </div>
+		  <script>jQuery('#columnWidgets span a').attr('href','<?php echo esc_url(get_admin_url());?>widgets.php');</script>
+
+          <div id="column-category">
+               <span><?php _e('<br> Choose the category: ','parabola'); ?> </span>
+               <select id="parabola_columnCateg" name='parabola_settings[parabola_columnCateg]'>
+               <option value=""><?php echo esc_attr(__('Select Category','parabola')); ?></option>
+               <?php echo $parabolas["parabola_columnCateg"];
+               $categories = get_categories();
+               foreach ($categories as $category) {
+                 	$option = '<option value="'.$category->category_nicename.'" ';
+               	$option .= selected($parabolas["parabola_columnCateg"], $category->category_nicename, false).' >';
+               	$option .= $category->cat_name;
+               	$option .= ' ('.$category->category_count.')';
+               	$option .= '</option>';
+               	echo $option;
+               } ?>
+               </select>
+          </div>
+		   <span id="column-post-number"><?php _e('Number of posts to show:','parabola'); ?>
+               <input id='parabola_columnNumber' name='parabola_settings[parabola_columnNumber]' size='3' type='text' value='<?php echo esc_attr( $parabolas['parabola_columnNumber'] ) ?>' />
+          </span>
+
+     </div>
+</div>
+
+<?php
+	echo "<div class='slmini'><b>".__("Columns per row:","parabola")."</b> ";
 	$items = array ("0" ,"1", "2" , "3" , "4");
 	echo "<select id='parabola_nrcolumns' name='parabola_settings[parabola_nrcolumns]'>";
 	foreach($items as $item) {
@@ -437,36 +554,13 @@ function cryout_setting_frontcolumns_fn() {
 
 	echo "<div class='slmini'><b>".__("Image Size:","parabola")."</b> ";
 	echo __("Height: ","parabola")."<input id='parabola_colimageheight' name='parabola_settings[parabola_colimageheight]' size='4' type='text' value='".esc_attr( $parabolas['parabola_colimageheight'] )."' /> px &nbsp;&nbsp;";
-	echo __("Width: ","parabola")."<span id='parabola_colimagewidth'></span> px";
+	echo __("Width: ","parabola")."<input id='parabola_colimagewidth' name='parabola_settings[parabola_colimagewidth]' size='4' type='text' value='".esc_attr( $parabolas['parabola_colimagewidth'] )."' readonly/> px";
 	echo "<small>".__("The sizes for your column images. The width is dependent on total site width and not configurable.","parabola")."</small></div>";
      ?>
      <div class='slmini'><b><?php _e("Read more text:","parabola");?></b>
      <input id='parabola_columnreadmore' name='parabola_settings[parabola_columnreadmore]' size='30' type='text' value='<?php echo esc_attr( $parabolas['parabola_columnreadmore'] ) ?>' />
      <?php
 	echo "<small>".__("The linked text that appears at the bottom of each column. Leave empty to hide the link.","parabola")."</small></div>";
-
-     for ($i=1;$i<=4;$i++):
-     // let's generate the columns
-     ?>
-     <div class="slidebox">
-          <h4 class="slidetitle" > <?php _e("Column","parabola");?> <?php echo $i; ?></h4>
-          <div class="slidercontent">
-               <h5><?php _e("Image","parabola");?></h5>
-               <input type="text" value="<?php echo esc_url($parabolas['parabola_columnimg'.$i]); ?>" name="parabola_settings[parabola_columnimg<?php echo $i; ?>]"
-                    id="parabola_columnimg<?php echo $i; ?>" class="slideimages" />
-               <span class="description"><a href="#" class="upload_image_button button"><?php _e( 'Select / Upload Image', 'parabola' );?></a> </span>
-               <h5> <?php _e("Title","parabola");?> </h5>
-               <input id='parabola_columntitle<?php echo $i; ?>' name='parabola_settings[parabola_columntitle<?php echo $i; ?>]' size='50' type='text'
-                    value='<?php echo esc_attr( $parabolas['parabola_columntitle'.$i] ) ?>' />
-               <h5> <?php _e("Text","parabola");?> </h5>
-               <textarea id='parabola_columntext<?php echo $i; ?>' name='parabola_settings[parabola_columntext<?php echo $i; ?>]' rows='3' cols='50'
-                    type='textarea'><?php echo esc_attr($parabolas['parabola_columntext'.$i]) ?></textarea>
-               <h5> <?php _e("Link","parabola");?> </h5>
-               <input id='parabola_columnlink<?php echo $i; ?>' name='parabola_settings[parabola_columnlink<?php echo $i; ?>]' size='50' type='text'
-                    value='<?php echo esc_url( $parabolas['parabola_columnlink'.$i] ) ?>' />
-          </div>
-     </div> <?php
-     endfor;
 } // cryout_setting_frontcolumns_fn()
 
 
@@ -477,8 +571,7 @@ function cryout_setting_fronttext_fn() {
      echo "<div class='slidebox'><h4 class='slidetitle'> ".__("Extra Text","parabola")." </h4><div class='slidercontent'>";
 
      echo "<div style='width:100%;'><span>".__("Text for the Presentation Page","parabola")."</span><small>".
-          __("More text for your front page. The top title is above the slider, the second title between the slider and the columns and 2 more rows of text under the columns.<br>".
-     	   "It's all optional so leave any input field empty to not dispaly it.","parabola")."</small></div>";
+          __("More text for your front page. The top title is above the slider, the second title between the slider and the columns and 2 more rows of text under the columns.<br>It's all optional so leave any input field empty to not dispaly it.","parabola")."</small></div>";
 
 	echo "<h5>".__("Top Title","parabola")."</h5><br>";
      echo "<input id='parabola_fronttext1' name='parabola_settings[parabola_fronttext1]' size='50' type='text' value='".esc_attr( $parabolas['parabola_fronttext1'] )."' />";
@@ -1004,7 +1097,7 @@ function cryout_setting_metaback_fn() {
      	echo ">$itemsare[$id]</option>";
      endforeach;
 	echo "</select>";
-	echo "<div><small>".__("The background for your meta areas (author, date, category, tags, continue reading and edit button).","parabola")."</small></div>";
+	echo "<div><small>".__("The background for your meta areas (author, date, category, tags and edit button).","parabola")."</small></div>";
 }
 
 ////////////////////////////////
@@ -1377,21 +1470,6 @@ function cryout_setting_excerptwords_fn() {
 	echo "<div><small>".__("The number of words for excerpts. When that number is reached the post will be interrupted by a <i>Continue reading</i> link that will take the reader to the full post page.","parabola")."</small></div>";
 }
 
-//CHECKBOX - Name: parabola_settings[magazinelayout]
-function cryout_setting_magazinelayout_fn() {
-	global $parabolas;
-	$items = array ("Enable" , "Disable");
-	$itemsare = array( __("Enable","parabola"), __("Disable","parabola"));
-	echo "<select id='parabola_magazinelayout' name='parabola_settings[parabola_magazinelayout]'>";
-foreach($items as $id=>$item) {
-	echo "<option value='$item'";
-	selected($parabolas['parabola_magazinelayout'],$item);
-	echo ">$itemsare[$id]</option>";
-}
-	echo "</select>";
-	echo "<div><small>".__("Enable the Magazine Layout. This layout applies to pages with posts and shows 2 posts per row.","parabola")."</small></div>";
-}
-
 // TEXTBOX - Name: parabola_settings[excerptdots]
 function cryout_setting_excerptdots_fn() {
 	global $parabolas;
@@ -1650,17 +1728,46 @@ function cryout_setting_customjs_fn() {
 	echo "<textarea id='parabola_customjs' name='parabola_settings[parabola_customjs]' rows='8' cols='70' type='textarea' >".esc_textarea(htmlspecialchars_decode($parabolas['parabola_customjs']))." </textarea>";
 	echo "<div><small>".__("Insert your custom Javascript code here. (Google Analytics and any other forms of Analytic software).","parabola")."</small></div>";
 }
+
 function cryout_setting_iecompat_fn() {
 	global $parabolas;
 	$items = array (1, 0);
 	$itemsare = array( __("Enable","parabola"), __("Disable","parabola"));
 	echo "<select id='parabola_iecompat' name='parabola_settings[parabola_iecompat]'>";
-foreach($items as $id=>$item) {
-	echo "<option value='$item'";
-	selected($parabolas['parabola_iecompat'],$item);
-	echo ">$itemsare[$id]</option>";
-}
+	foreach($items as $id=>$item) {
+		echo "<option value='$item'";
+		selected($parabolas['parabola_iecompat'],$item);
+		echo ">$itemsare[$id]</option>";
+	}
 	echo "</select>";
 	echo "<div><small>".__("Enable extra compatibility tag for older Internet Explorer versions. Turning this option on will trigger W3C validation errors.","parabola")."</small></div>";
 }
-?>
+
+function cryout_setting_masonry_fn() {
+	global $parabolas;
+	$items = array (1, 0);
+	$itemsare = array( __("Enable","parabola"), __("Disable","parabola"));
+	echo "<select id='parabola_masonry' name='parabola_settings[parabola_masonry]'>";
+	foreach($items as $id=>$item) {
+		echo "<option value='$item'";
+		selected($parabolas['parabola_masonry'],$item);
+		echo ">$itemsare[$id]</option>";
+	}
+	echo "</select>";
+	echo "<div><small>".__("Disable to troubleshoot compatibility with plugins that dynamically add content to post lists and change length.","parabola")."</small></div>";
+}
+
+function cryout_setting_fitvids_fn() {
+	global $parabolas;
+	$items = array (1, 0);
+	$itemsare = array( __("Enable","parabola"), __("Disable","parabola"));
+	echo "<select id='parabola_fitvids' name='parabola_settings[parabola_fitvids]'>";
+	foreach($items as $id=>$item) {
+		echo "<option value='$item'";
+		selected($parabolas['parabola_fitvids'],$item);
+		echo ">$itemsare[$id]</option>";
+	}
+	echo "</select>";
+	echo "<input type='hidden' name='parabola_settings[parabola_current_admin_menu]' id='parabola_current' value='". $parabolas['parabola_current_admin_menu']."'>";
+	echo "<div><small>".__("Disable to troubleshoot embedded video resize issues.","parabola")."</small></div>";
+}

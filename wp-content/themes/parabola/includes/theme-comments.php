@@ -1,10 +1,10 @@
 <?php /*
- * Comments related functions - comments.php 
+ * Comments related functions - comments.php
  *
  * @package parabola
  * @subpackage Functions
  */
- 
+
 if ( ! function_exists( 'parabola_comment' ) ) :
 /**
  * Template for comments and pingbacks.
@@ -32,7 +32,7 @@ function parabola_comment( $comment, $args, $depth ) {
 	<li <?php comment_class(); ?> id="li-comment-<?php comment_ID(); ?>">
 		<div id="comment-<?php comment_ID(); ?>">
 		<div class="comment-author vcard">
-			<?php echo get_avatar( $comment, 50 ); ?>
+			<?php echo get_avatar( $comment, 60 ); ?>
 			<div class="comment-details">
 				<?php printf(  '%s ', sprintf( '<cite class="fn">%s</cite>', get_comment_author_link() ) ); ?>
 				<div class="comment-meta commentmetadata">
@@ -43,7 +43,7 @@ function parabola_comment( $comment, $args, $depth ) {
 				</div><!-- .comment-meta .commentmetadata -->
 			</div> <!-- .comment-details -->
 		</div><!-- .comment-author .vcard -->
-		
+
 		<?php if ( $comment->comment_approved == '0' ) : ?>
 			<span class="comment-await"><em><?php _e( 'Your comment is awaiting moderation.', 'parabola' ); ?></em></span>
 			<br />
@@ -85,9 +85,16 @@ if ( ! function_exists( 'parabola_comments_on' ) ) :
  */
 function parabola_comments_on() {
 	if ( comments_open() && ! post_password_required() ) :
-		print '<div class="comments-link">';
-		printf ( comments_popup_link( __( 'No comments', 'parabola' ), __( '<b>1</b> <span>Comment</span>', 'parabola' ), __( '<b>%</b> <span>Comments</span>', 'parabola' ),(''),__('<b>Comments off</b>','parablola') ));
-		print '</div>';
+		echo '<div class="comments-link">';
+		printf ( comments_popup_link(
+			__( 'No comments', 'parabola' ),
+			sprintf( _n( 'One Comment', '%1$s Comments', get_comments_number(), 'parabola' ),
+			number_format_i18n( get_comments_number() )) ,
+			sprintf( _n( 'One Comment', '%1$s Comments', get_comments_number(), 'parabola' ),
+			number_format_i18n( get_comments_number() )) ,
+			'',
+			__('<b>Comments off</b>','parabola') ));
+		echo '</div>';
 	endif;
 }
 endif;
@@ -113,7 +120,7 @@ if ( get_comment_pages_count() > 1 && get_option( 'page_comments' ) ) : // Are t
 				<div class="nav-previous"><?php previous_comments_link( '<span class="meta-nav">&larr;</span>'.__('Older Comments', 'parabola' ) ); ?></div>
 				<div class="nav-next"><?php next_comments_link( __( 'Newer Comments', 'parabola' ).' <span class="meta-nav">&rarr;</span>' ); ?></div>
 			</div> <!-- .navigation -->
-<?php endif; // check for comment navigation 
+<?php endif; // check for comment navigation
 }
 
 add_action('cryout_before_comments_hook','parabola_comments_navigation');
@@ -121,26 +128,26 @@ add_action('cryout_after_comments_hook','parabola_comments_navigation');
 
 /*
 * Listing the actual comments
-* 
+*
 * Loop through and list the comments. Tell wp_list_comments()
 * to use parabola_comment() to format the comments.
 * If you want to overload this in a child theme then you can
 * define parabola_comment() and that will be used instead.
 * See parabola_comment() in parabola/functions.php for more.
  */
-function parabola_list_comments() {	
+function parabola_list_comments() {
 					wp_list_comments( array( 'callback' => 'parabola_comment' ) );
 			}
 
-add_action('cryout_comments_hook','parabola_list_comments');	
+add_action('cryout_comments_hook','parabola_list_comments');
 
 /*
  * If there are no comments and comments are closed
  */
-function parabola_comments_off() { 
+function parabola_comments_off() {
 if ( ! comments_open() ) : ?>
 	<p class="nocomments"><?php _e( 'Comments are closed.', 'parabola' ); ?></p>
-<?php endif; // end ! comments_open() 
+<?php endif; // end ! comments_open()
 }
 
 

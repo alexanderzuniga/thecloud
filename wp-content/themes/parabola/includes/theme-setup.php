@@ -62,9 +62,15 @@ function parabola_setup() {
 	// This theme styles the visual editor with editor-style.css to match the theme style.
 	add_editor_style( "styles/editor-style.css" );
 
+	// Support title tag since WP 4.1
+	add_theme_support( 'title-tag' );
+
 	// This theme uses post thumbnails
 	add_theme_support( 'post-thumbnails' );
 	set_post_thumbnail_size( 150, 150 ); // default Post Thumbnail dimensions (cropped)
+
+	// WooCommerce compatibility tag
+	add_theme_support( 'woocommerce' );
 
 	// Add default posts and comments RSS feed links to head
 
@@ -101,11 +107,15 @@ function parabola_setup() {
 	define( 'HEADER_IMAGE_WIDTH', apply_filters( 'parabola_header_image_width', $parabola_totalSize ) );
 	define( 'HEADER_IMAGE_HEIGHT', apply_filters( 'parabola_header_image_height', $parabola_hheight) );
 	//set_post_thumbnail_size( HEADER_IMAGE_WIDTH, HEADER_IMAGE_HEIGHT, true );
-	add_image_size('header',HEADER_IMAGE_WIDTH,HEADER_IMAGE_HEIGHT,true);	
+	add_image_size( 'header', HEADER_IMAGE_WIDTH, HEADER_IMAGE_HEIGHT, true );
 
 	global $parabola_fpsliderwidth;
 	global $parabola_fpsliderheight;
-	add_image_size('slider',$parabola_fpsliderwidth,$parabola_fpsliderheight,true);
+	add_image_size( 'slider', $parabola_fpsliderwidth, $parabola_fpsliderheight, true);
+    global $parabola_colimageheight;
+    global $parabola_colimagewidth;
+    //die($parabola_colimagewidth);
+    add_image_size( 'parabola-columns', $parabola_colimagewidth, $parabola_colimageheight, true );
 	// Add a way for the custom header to be styled in the admin panel that controls
 	// custom headers. See parabola_admin_header_style(), below.
 	define( 'NO_HEADER_TEXT', true );
@@ -125,6 +135,42 @@ function parabola_setup() {
 	) );
 }
 endif;
+
+// Backwards compatibility for the title-tag
+if ( ! function_exists( '_wp_render_title_tag' ) ) :
+	add_action( 'wp_head', 'parabola_render_title' );
+	add_filter( 'wp_title', 'parabola_filter_wp_title' );
+	add_filter('wp_title_rss','parabola_filter_wp_title_rss');
+endif;
+
+function parabola_render_title() { ?>
+		<title><?php wp_title( '', true, 'right' ); ?></title>
+<?php }
+
+function parabola_filter_wp_title( $title ) {
+    // Get the Site Name
+    $site_name = get_bloginfo( 'name' );
+    // Prepend name
+    $filtered_title = (((strlen($site_name)>0)&&(strlen($title)>0))?$title.' - '.$site_name:$title.$site_name);
+	// Get the Site Description
+ 	$site_description = get_bloginfo( 'description' );
+    // If site front page, append description
+    if ( (is_home() || is_front_page()) && $site_description ) {
+        // Append Site Description to title
+        $filtered_title = ((strlen($site_name)>0)&&(strlen($site_description)>0))?$site_name. " | ".$site_description:$site_name.$site_description;
+    }
+	// Add pagination if that's the case
+	global $page, $paged;
+	if ( $paged >= 2 || $page >= 2 )
+	$filtered_title .=	 ' | ' . sprintf( __( 'Page %s', 'parabola' ), max( $paged, $page ) );
+
+    // Return the modified title
+    return $filtered_title;
+}
+
+function parabola_filter_wp_title_rss($title) {
+	return ' ';
+}
 
 if ( ! function_exists( 'parabola_admin_header_style' ) ) :
 /**
@@ -291,7 +337,7 @@ function parabola_widgets_init() {
 		'before_title' => '<h3 class="widget-title">',
 		'after_title' => '</h3>',
 	) );
-	
+
 		// Area 0, located inside the header
 	register_sidebar( array(
 		'name' => __( 'Header Widgets', 'parabola' ),
@@ -302,6 +348,28 @@ function parabola_widgets_init() {
 		'before_title' => '<h3 class="widget-title">',
 		'after_title' => '</h3>',
 	) );
+
+	global $parabola_sidewidth;
+	global $parabola_sidebar;
+	global $parabola_nrcolumns;
+	global $parabola_colimageheight;
+
+	$parabola_total = abs($parabola_sidewidth) + abs($parabola_sidebar);
+
+	if ($parabola_nrcolumns==0) $parabola_colimagewidth = $parabola_total;
+		else $parabola_colimagewidth = abs(($parabola_total-($parabola_nrcolumns*7*2)-($parabola_total*2*($parabola_nrcolumns-1)/100))/$parabola_nrcolumns-14);
+
+	// Area 11, the presentation page columns
+	register_sidebar( array(
+		'name' => __( 'Presentation Page Columns', 'parabola' ),
+		'id' => 'presentation-page-columns-area',
+		'description' => sprintf(__('Only drag [Cryout Column] widgets here. Recommended size for uploaded images: %1$dpx (width) x %2$dpx (height). Go to the Parabola Settings page >> Presentation Page Settings >> Columns to edit sizes and more.','parabola' ),$parabola_colimagewidth,$parabola_colimageheight),
+		'before_widget' => '<li id="%1$s" class="widget-container %2$s">',
+		'after_widget' => '</li>',
+		'before_title' => '<h3 class="widget-title">',
+		'after_title' => '</h3>',
+	) );
+
 }
 /** Register sidebars by running parabola_widgets_init() on the widgets_init hook. */
 add_action( 'widgets_init', 'parabola_widgets_init' );
@@ -356,7 +424,7 @@ function parabola_footer_sidebar_class() {
 			</ul>
 		</div>
 		<?php } }
-		
+
 add_action ('cryout_header_widgets_hook','parabola_header_widget');
 
 

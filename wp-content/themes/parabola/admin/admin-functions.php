@@ -1,4 +1,24 @@
 <?php
+
+
+function parabola_theme_settings_placeholder() { 
+	if (function_exists('parabola_theme_settings_restore') ):
+			parabola_theme_settings_restore();
+	else:
+?>
+   <div id="parabola-settings-placeholder">
+		<h3>Where are the theme settings?</h3>
+		<p>According to the <a href="https://make.wordpress.org/themes/2015/04/21/this-weeks-meeting-important-information-regarding-theme-options/" target="_blank">Wordpress Theme Review Guidelines</a>, starting with Parabola v1.6 we had to remove the settings page from the theme and transfer all the settings to the <a href="http://codex.wordpress.org/Appearance_Customize_Screen" target="_blank">Customizer</a> interface.</p>
+		<p>However, we feel that the Customizer interface does not provide the right medium (in space of terms and usability) for our existing theme options. We've created our settings with a certain layout that is not really compatible with the Customizer interface.</p>
+		<p>As an alternative solution that allows us to keep updating and improving our theme we have moved the settings functionality to the separate <a href="https://wordpress.org/plugins/cryout-theme-settings/" target="_blank">Cryout Serious Theme Settings</a> plugin. To restore the theme settings page to previous functionality, all you need to do is install this free plugin with a couple of clicks.</p>
+		<h3>How do I restore the settings?</h3>
+		<p><strong>Navigate <a href="themes.php?page=parabola-extra-plugins">to this page</a> to install and activate the Cryout Serious Theme Settings plugin, then return here to find the settings page in all its past glory.</strong></p>
+		<p>The plugin is compatible with all our themes that are affected by this change and only needs to be installed once.</p>
+   </div>
+<?php
+	endif;
+} // parabola_theme_settings_placeholder()
+
 /**
  * Export Parabola settings to file
  */
@@ -55,7 +75,7 @@ if ( isset( $_POST['parabola_export'] ) ){
 function parabola_import_form(){
 
     $bytes = apply_filters( 'import_upload_size_limit', wp_max_upload_size() );
-    $size = wp_convert_bytes_to_hr( $bytes );
+    $size = size_format( $bytes );
     $upload_dir = wp_upload_dir();
     if ( ! empty( $upload_dir['error'] ) ) :
         ?><div class="error"><p><?php _e('Before you can upload your import file, you will need to fix the following error:', 'parabola'); ?></p>

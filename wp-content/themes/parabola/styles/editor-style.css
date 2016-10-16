@@ -5,7 +5,7 @@ Theme Name: Parabola
 Used to style the TinyMCE editor.
 */
 html .mceContentBody {
-	max-width:800px;
+
 }
 * {
 	font-family: Georgia, "Bitstream Charter", serif;
@@ -236,7 +236,7 @@ tr td {
 
 img {
 	margin: 0;
-	max-width: 640px;
+
 }
 .alignleft,
 img.alignleft {

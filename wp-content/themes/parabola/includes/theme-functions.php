@@ -8,13 +8,10 @@
 
 
  /**
- * Loads necessary scripts
- * Adds HTML5 tags for IE8
+ * Adds HTML5 tags for old IEs
  * Used in header.php
 */
 function parabola_header_scripts() {
-	$parabolas= parabola_get_theme_options();
-	foreach ($parabolas as $key => $value) { ${"$key"} = $value ; }
 ?>
 <!--[if lt IE 9]>
 <script>
@@ -26,19 +23,6 @@ document.createElement('aside');
 document.createElement('footer');
 </script>
 <![endif]-->
-<script type="text/javascript">
-function makeDoubleDelegate(function1, function2) { /* concatenate functions */
-    return function() { if (function1) function1(); if (function2) function2(); }
-}
-function parabola_onload() {
-<?php if ($parabola_mobile=="Enable") { // If mobile view is enabled ?>	jQuery(".entry-content").fitVids(); <?php } ?>
-};
-jQuery(document).ready(function(){
-<?php if ($parabola_mobile=="Enable") { // If mobile view is enabled ?>	parabola_mobilemenu_init(); <?php } ?>
-});
-/* make sure not to lose previous onload events */
-window.onload = makeDoubleDelegate(window.onload, parabola_onload );
-</script>
 <?php
 } // parabola_header_scripts()
 
@@ -56,14 +40,14 @@ function parabola_title_and_description() {
 	// Check if this is a post or page, if it has a thumbnail, and if it's a big one
 	global $post;
 
-	if (get_header_image() != '') { $himgsrc=get_header_image(); }
+	if ( get_header_image() != '') { $himgsrc= get_header_image(); }
 	if ( is_singular() && has_post_thumbnail( $post->ID ) && $parabola_fheader == "Enable" &&
 		( $image = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'header' ) ) &&
-		$image[1] >= HEADER_IMAGE_WIDTH ) : $himgsrc= $image[0];
+		$image[1] >= HEADER_IMAGE_WIDTH ) : $himgsrc= esc_url( $image[0] );
 	endif;
 
 
-	if (isset($himgsrc) && ($himgsrc != '')) : echo '<img id="bg_image" alt="" title="" src="'.$himgsrc.'"  />';  endif;
+	if (isset($himgsrc) && ($himgsrc != '')) : echo '<img id="bg_image" alt="" title="" src="' . esc_url( $himgsrc ) . '"  />';  endif;
 ?>
 <div id="header-container">
 <?php
@@ -71,20 +55,20 @@ function parabola_title_and_description() {
 	switch ($parabola_siteheader) {
 		case 'Site Title and Description':
 			echo '<div>';
-			$heading_tag = ( is_home() || is_front_page() ) ? 'h1' : 'div';
+			$heading_tag = ( ( is_home() || is_front_page() ) && !is_page() ) ? 'h1' : 'div';
 			echo '<'.$heading_tag.' id="site-title">';
-			echo '<span> <a href="'.esc_url( home_url( '/' ) ).'" title="'.esc_attr( get_bloginfo( 'name', 'display' ) ).'" rel="home">'.get_bloginfo( 'name' ).'</a> </span>';
+			echo '<span> <a href="' . esc_url( home_url( '/' ) ) . '" title="'.esc_attr( get_bloginfo( 'name', 'display' ) ).'" rel="home">' . esc_attr( get_bloginfo( 'name' ) ) . '</a> </span>';
 			echo '</'.$heading_tag.'>';
-			echo '<div id="site-description" >'.get_bloginfo( 'description' ).'</div></div>';
+			echo '<div id="site-description" >' . esc_attr( get_bloginfo( 'description' ) ) . '</div></div>';
 		break;
 
 		case 'Clickable header image' :
-			echo '<a href="'.esc_url( home_url( '/' ) ).'" id="linky"></a>' ;
+			echo '<a href="' . esc_url( home_url( '/' ) ) . '" id="linky"></a>' ;
 		break;
 
 		case 'Custom Logo' :
 			if (isset($parabola_logoupload) && ($parabola_logoupload != '')) :
-				echo '<div><a id="logo" href="'.esc_url( home_url( '/' ) ).'" ><img title="" alt="" src="'.$parabola_logoupload.'" /></a></div>';
+				echo '<div><a id="logo" href="' . esc_url( home_url( '/' ) ) . '" ><img title="' . esc_attr( get_bloginfo( 'name', 'display' ) ) . '" alt="' . esc_attr( get_bloginfo( 'name', 'display' ) ).'" src="' . esc_url( $parabola_logoupload ) . '" /></a></div>';
 			endif;
 		break;
 
@@ -154,7 +138,7 @@ function parabola_set_social_icons($id) {
 				$cryout_current_social = esc_url( ${"parabola_social$j"} );
 			endif;	?>
 
-			<a <?php if ($parabolas['parabola_social_target'.$i]) {echo ' target="_blank" ';} ?> rel="nofollow" href="<?php echo $cryout_current_social; ?>"
+			<a <?php if ($parabolas['parabola_social_target'.$i]) {echo ' target="_blank" ';} ?> rel="nofollow" href="<?php echo esc_url( $cryout_current_social ); ?>"
 			class="socialicons social-<?php echo esc_attr(${"parabola_social$i"}); ?>" title="<?php echo ${"parabola_social_title$i"} !="" ? esc_attr(${"parabola_social_title$i"}) : esc_attr(${"parabola_social$i"}); ?>">
 				<img alt="<?php echo esc_attr(${"parabola_social$i"}); ?>" src="<?php echo get_template_directory_uri().'/images/socials/'.${"parabola_social$i"}.'.png'; ?>" />
 			</a><?php
@@ -173,19 +157,168 @@ function parabola_back_top() {
 	echo '<div id="toTop"> </div>';
 } // parabola_back_top()
 
-if ($parabola_backtop=="Enable") add_action ('cryout_body_hook','parabola_back_top');
+if ($parabola_backtop == "Enable") add_action ( 'cryout_body_hook', 'parabola_back_top' );
+
+
+/**
+ * Creates breadcrumns with page sublevels and category sublevels.
+ */
+if ( ! function_exists( 'parabola_breadcrumbs' ) ) :
+function parabola_breadcrumbs() {
+
+	$parabolas= parabola_get_theme_options();
+	foreach ($parabolas as $key => $value) { ${"$key"} = $value ; }
+	$showOnHome = 1; // 1 - show breadcrumbs on the homepage, 0 - don't show
+	$separator = ' &raquo; '; // separator between crumbs
+	$home = '<a href="' . esc_url( home_url() ) . '">' . __('Home','parabola') . '</a>'; // text for the 'Home' link
+	$showCurrent = 1; // 1 - show current post/page title in breadcrumbs, 0 - don't show
+	$before = '<span class="current">'; // tag before the current crumb
+	$after = '</span>'; // tag after the current crumb
+
+	global $post;
+	$homeLink = esc_url( home_url() );
+	if ( is_front_page() && $parabola_frontpage=="Enable" ) { return; }
+	if ( is_home() && $parabola_frontpage!="Enable" ) {
+
+		if ( $showOnHome == 1 ) { ?>
+			<div id="breadcrumbs">
+				<div id="breadcrumbs-box">
+					<a href="<?php echo $homeLink ?>"><i class="icon-homebread"></i><?php _e('Home Page','parabola') ?></a>
+				</div>
+			</div>
+			<?php
+		}
+	} else {
+
+		echo '<div class="breadcrumbs">' . $home . $separator . ' ';
+
+		if ( is_category() ) {
+			// category
+			$thisCat = get_category(get_query_var('cat'), false);
+			if ($thisCat->parent != 0) echo get_category_parents($thisCat->parent, TRUE, ' ' . $separator . ' ');
+			echo $before . __('Category','parabola').' "' . single_cat_title('', false) . '"' . $after;
+
+		} elseif ( is_search() ) {
+			// search
+			echo $before . __('Search results for','parabola').' "' . get_search_query() . '"' . $after;
+
+		} elseif ( is_day() ) {
+			// daily archive
+			echo '<a href="' . get_year_link(get_the_time('Y')) . '">' . get_the_time('Y') . '</a> ' . $separator . ' ';
+			echo '<a href="' . get_month_link(get_the_time('Y'),get_the_time('m')) . '">' . get_the_time('F') . '</a> ' . $separator . ' ';
+			echo $before . get_the_time('d') . $after;
+
+		} elseif ( is_month() ) {
+			// montly archive
+			echo '<a href="' . get_year_link(get_the_time('Y')) . '">' . get_the_time('Y') . '</a> ' . $separator . ' ';
+			echo $before . get_the_time('F') . $after;
+
+		} elseif ( is_year() ) {
+			// yearly archive
+			echo $before . get_the_time('Y') . $after;
+
+		} elseif ( is_single() && !is_attachment() ) {
+			// single post/page
+			if ( get_post_type() != 'post' ) {
+				$post_type = get_post_type_object(get_post_type());
+				$slug = $post_type->rewrite;
+				echo '<a href="' . $homeLink . '/' . $slug['slug'] . '/">' . $post_type->labels->singular_name . '</a>';
+				if ($showCurrent == 1) echo ' ' . $separator . ' ' . $before . get_the_title() . $after;
+			} else {
+				$cat = get_the_category();
+				if (isset($cat[0])) {
+						$cat = $cat[0];
+				} else {
+						$cat = false;
+				}
+				if ($cat) {
+						$cats = get_category_parents($cat, TRUE, ' ' . $separator . ' ');
+				} else {
+						$cats=false;
+				}
+				if ($showCurrent == 0 && $cats) $cats = preg_replace("#^(.+)\s$separator\s$#", "$1", $cats);
+				echo $cats;
+				if ($showCurrent == 1) echo $before . get_the_title() . $after;
+			}
+
+		} elseif ( !is_single() && !is_page() && get_post_type() != 'post' && !is_404() ) {
+			// some other single item
+			$post_type = get_post_type_object(get_post_type());
+			echo $before . $post_type->labels->singular_name . $after;
+
+		} elseif ( is_attachment() ) {
+			// attachment
+			$parent = get_post($post->post_parent);
+			$cat = get_the_category($parent->ID);
+			if (isset($cat[0])) {
+					$cat = $cat[0];
+			} else {
+					$cat=false;
+			}
+			if ($cat) echo get_category_parents($cat, TRUE, ' ' . $separator . ' ');
+			echo '<a href="' . get_permalink($parent) . '">' . $parent->post_title . '</a>';
+			if ($showCurrent == 1) echo ' ' . $separator . ' ' . $before . get_the_title() . $after;
+
+		} elseif ( is_page() && !$post->post_parent ) {
+			// parent page
+			if ($showCurrent == 1) echo $before . get_the_title() . $after;
+		} elseif ( is_page() && $post->post_parent ) {
+			// child page
+			$parent_id  = $post->post_parent;
+			$breadcrumbs = array();
+			while ($parent_id) {
+				$page = get_page($parent_id);
+				$breadcrumbs[] = '<a href="' . get_permalink($page->ID) . '">' . get_the_title($page->ID) . '</a>';
+				$parent_id  = $page->post_parent;
+			}
+			$breadcrumbs = array_reverse($breadcrumbs);
+			for ($i = 0; $i < count($breadcrumbs); $i++) {
+				echo $breadcrumbs[$i];
+				if ($i != count($breadcrumbs)-1) echo ' ' . $separator . ' ';
+			}
+			if ($showCurrent == 1) echo ' ' . $separator . ' ' . $before . get_the_title() . $after;
+
+		} elseif ( is_tag() ) {
+			// tag archive
+			echo $before . __('Posts tagged','parabola').' "' . single_tag_title('', false) . '"' . $after;
+
+		} elseif ( is_author() ) {
+			// author archive
+			global $author;
+			$userdata = get_userdata($author);
+			echo $before . __('Articles by','parabola'). ' ' . $userdata->display_name . $after;
+
+		} elseif ( is_404() ) {
+			// 404
+			echo $before . __('Error 404','parabola') . $after;
+		} elseif ( get_post_format() ) {
+			// post format
+			echo $before . '"' . ucwords( get_post_format() ) . '" ' . __( 'Post format', 'parabola' ) . $after;
+		}
+
+		if ( get_query_var('paged') ) {
+			if ( is_category() || is_day() || is_month() || is_year() || is_search() || is_tag() || is_author() ) echo ' (';
+			echo __('Page','parabola') . ' ' . get_query_var('paged');
+			if ( is_category() || is_day() || is_month() || is_year() || is_search() || is_tag() || is_author() ) echo ')';
+		}
+		?>
+		</div>
+		<?php
+	}
+} // parabola breadcrumbs()
+endif;
 
 
  /**
  * Creates breadcrumns with page sublevels and category sublevels.
  */
-function parabola_breadcrumbs() {
+function parabola_breadcrumbs2() {
 	$parabolas= parabola_get_theme_options();
 	foreach ($parabolas as $key => $value) { ${"$key"} = $value ; }
 	global $post;
 	if (is_page() && !is_front_page() || is_single() || is_category() || is_archive()) {
 		echo '<div class="breadcrumbs">';
-        echo '<a href="'.get_bloginfo('url').'">'.get_bloginfo('name').' &raquo; </a>';
+        echo '<a href="'. esc_url( home_url() ) . '">' . esc_attr( get_bloginfo('name') ) . ' &raquo; </a>';
 
         if (is_page()) {
 
@@ -213,7 +346,7 @@ function parabola_breadcrumbs() {
 
 		if (is_tag()) {
 			echo ''.__('Tag','parabola').' &raquo; '.single_tag_title('', false);
-		} 		
+		}
 
         // Current page
         if (is_page() || is_single()) {
@@ -224,15 +357,15 @@ function parabola_breadcrumbs() {
 	elseif (is_home() && $parabola_frontpage!="Enable" ) {
         // Front page
         echo '<div class="breadcrumbs">';
-        echo '<a href="'.get_bloginfo('url').'">'.get_bloginfo('name').'</a> '."&raquo; ";
-        _e('Home Page','parabola');
+        echo '<a href="'.esc_attr( home_url() ) . '">' . esc_attr( get_bloginfo('name')) . '</a> ' . "&raquo; ";
+        _e( 'Home Page', 'parabola' );
         echo '</div>';
     }
 
 } // parabola_breadcrumbs()
 
 
-if($parabola_breadcrumbs=="Enable")  add_action ('cryout_breadcrumbs_hook','parabola_breadcrumbs');
+if($parabola_breadcrumbs == "Enable")  add_action ( 'cryout_breadcrumbs_hook', 'parabola_breadcrumbs' );
 
 
 if ( ! function_exists( 'parabola_pagination' ) ) :
@@ -279,14 +412,14 @@ function parabola_pagination($pages = '', $range = 2, $prefix ='')
 endif;
 
 function parabola_nextpage_links($defaults) {
-$args = array(
-'link_before'      => '<em>',
-'link_after'       => '</em>',
-);
-$r = wp_parse_args($args, $defaults);
-return $r;
+    $args = array(
+        'link_before'      => '<em>',
+        'link_after'       => '</em>',
+    );
+    $r = wp_parse_args($args, $defaults);
+    return $r;
 }
-add_filter('wp_link_pages_args','parabola_nextpage_links');
+//add_filter('wp_link_pages_args','parabola_nextpage_links');
 
 
 /**
@@ -295,16 +428,16 @@ add_filter('wp_link_pages_args','parabola_nextpage_links');
 function parabola_site_info() {
 	$parabolas = parabola_get_theme_options();
 	foreach ($parabolas as $key => $value) { ${"$key"} = $value ; }	?>
-	<div style="text-align:center;padding:5px 0 2px;text-transform:uppercase;font-size:11px;margin:0 auto;">
+	<div style="text-align:center;padding:5px 0 2px;text-transform:uppercase;font-size:12px;margin:1em auto 0;">
 	<?php _e('Powered by','parabola')?> <a target="_blank" href="<?php echo 'http://www.cryoutcreations.eu';?>" title="<?php echo 'Parabola Theme by '.
-			'Cryout Creations';?>"><?php echo 'Pa&#1103;abola' ?></a> &amp; <a target="_blank" href="<?php echo esc_url('http://wordpress.org/' ); ?>"
+			'Cryout Creations';?>"><?php echo 'Parabola' ?></a> &amp; <a target="_blank" href="<?php echo 'http://wordpress.org/'; ?>"
 			title="<?php esc_attr_e('Semantic Personal Publishing Platform', 'parabola'); ?>"> <?php printf(' %s.', 'WordPress' ); ?>
 		</a>
 	</div><!-- #site-info -->
 	<?php
 } // parabola_site_info()
 
-add_action('cryout_footer_hook','parabola_site_info',12);
+add_action('cryout_footer_hook', 'parabola_site_info', 12);
 
 
 /**
@@ -313,14 +446,14 @@ add_action('cryout_footer_hook','parabola_site_info',12);
 function parabola_copyright() {
 	$parabolas = parabola_get_theme_options();
 	foreach ($parabolas as $key => $value) { ${"$key"} = $value ; }
-	echo '<div id="site-copyright">'.$parabola_copyright.'</div>';
+	echo '<div id="site-copyright">' . wp_kses_post( $parabola_copyright ) . '</div>';
 } // parabola_copyright()
 
 
-if ($parabola_copyright != '') add_action('cryout_footer_hook','parabola_copyright',11);
+if ( $parabola_copyright != '' ) add_action( 'cryout_footer_hook', 'parabola_copyright', 11 );
 
-add_action('wp_ajax_nopriv_do_ajax', 'parabola_ajax_function');
-add_action('wp_ajax_do_ajax', 'parabola_ajax_function');
+add_action( 'wp_ajax_nopriv_do_ajax', 'parabola_ajax_function' );
+add_action( 'wp_ajax_do_ajax', 'parabola_ajax_function' );
 
 if ( ! function_exists( 'parabola_ajax_function' ) ) :
 function parabola_ajax_function(){
@@ -350,14 +483,14 @@ function parabola_ajax_function(){
 endif;
 
 if ( ! function_exists( 'parabola_ajax_get_latest_posts' ) ) :
-function parabola_ajax_get_latest_posts($count,$categName){
+function parabola_ajax_get_latest_posts( $count, $categName ){
 	$testVar='';
 	// The Query
-	query_posts( 'category_name='.$categName);
+	query_posts( 'category_name=' . $categName);
 	// The Loop
 	if ( have_posts() ) :
 		while ( have_posts() ) : the_post();
-			$testVar .=the_title("<option>","</option>",0);
+			$testVar .= the_title( "<option>", "</option>", 0 );
 		endwhile;
 	else:
 	endif;
@@ -405,6 +538,21 @@ function parabola_get_layout_class() {
 	}
 } // parabola_get_layout_class()
 
+/**
+ *
+ */
+if ( ! function_exists( 'parabola_nextpage_links' ) ) :
+function parabola_nextpage_links( $defaults ) {
+	$args = array(
+		'link_before'      => '<em>',
+		'link_after'       => '</em>',
+	);
+	$r = wp_parse_args( $args, $defaults );
+	return $r;
+} // parabola_nextpage_links()
+endif;
+add_filter( 'wp_link_pages_args', 'parabola_nextpage_links' );
+
 
 /**
 * Retrieves the IDs for images in a gallery.
@@ -450,7 +598,7 @@ function parabola_get_gallery_images() {
 function parabola_mobile_body_class($classes){
 $parabolas = parabola_get_theme_options();
      if ($parabolas['parabola_mobile']=="Enable"):
-          $browser = $_SERVER['HTTP_USER_AGENT'];
+          $browser = (isset($_SERVER['HTTP_USER_AGENT'])?$_SERVER['HTTP_USER_AGENT']:'');
           $keys = 'mobile|android|mobi|tablet|ipad|opera mini|series 60|s60|blackberry';
           if (preg_match("/($keys)/i",$browser)): $classes[] = 'mobile'; endif; // mobile browser detected
      endif;
@@ -485,4 +633,21 @@ function cryout_hex2rgb($hex) {
    endif;
 } // cryout_cryout_hex2rgb()
 
-?>
+function cryout_fontname_cleanup( $fontid ) {
+	// do not process non font ids
+	if ( strtolower(trim($fontid)) == 'general font' ) return $fontid;
+	$fontid = trim($fontid);
+	$fonts = @explode(",", $fontid);
+	// split multifont ids into fonts array
+	if (is_array($fonts)){
+		foreach ($fonts as &$font) {
+			$font = trim($font);
+			// if font has space in name, quote it
+			if (strpos($font,' ')>-1) $font = '"' . $font . '"';
+		};
+		return implode(', ',$fonts);
+	} elseif (strpos($fontid,' ')>-1) {
+		// if font has space in name, quote it
+		return '"' . $fontid . '"';
+	} else return $fontid;	
+} // cryout_fontname_cleanup

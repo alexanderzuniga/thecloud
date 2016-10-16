@@ -12,18 +12,21 @@ Template Name: Blog Template ( Posts Page)
 
 
 	<?php 
-$paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
-query_posts('post_status=publish&orderby=date&order=desc&posts_per_page='.get_option('posts_per_page').'&paged=' . $paged);?>
+	$paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
+	query_posts('post_status=publish&orderby=date&order=desc&posts_per_page='.get_option('posts_per_page').'&paged=' . $paged);
+	?>
 
 
 		<?php if ( have_posts() ) : ?>
 
+				<div class="content-masonry">
 				<?php /* Start the Loop */ ?>
 				<?php while ( have_posts() ) : the_post(); ?>
 					<?php global $more; $more=0; ?>
 					<?php get_template_part( 'content/content', get_post_format() ); ?>
 
 				<?php endwhile; ?>
+				</div> <!--content-masonry-->
 
 				<?php if($parabola_pagination=="Enable") parabola_pagination(); else parabola_content_nav( 'nav-below' ); ?>
 

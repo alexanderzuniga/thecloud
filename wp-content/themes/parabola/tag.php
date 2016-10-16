@@ -27,7 +27,8 @@ get_header(); ?>
 							echo apply_filters( 'tag_archive_meta', '<div class="tag-archive-meta">' . $tag_description . '</div>' );
 					?>
 				</header>
-
+				
+				<div class="content-masonry">
 				<?php /* Start the Loop */ ?>
 				<?php while ( have_posts() ) : the_post(); ?>
 
@@ -38,10 +39,10 @@ get_header(); ?>
 						 */
 						get_template_part( 'content/content', get_post_format() );
 					
-
-				 endwhile;
-
-				 if($parabola_pagination=="Enable") parabola_pagination(); else parabola_content_nav( 'nav-below' ); ?>
+				endwhile; ?>
+				</div> <!--content-masonry-->
+				<?php
+				if($parabola_pagination=="Enable") parabola_pagination(); else parabola_content_nav( 'nav-below' ); ?>
 
 			<?php else : ?>
 

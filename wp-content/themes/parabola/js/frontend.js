@@ -2,87 +2,94 @@
  * Parabola Theme custom frontend scripting
  * http://www.cryoutcreations.eu/
  *
- * Copyright 2013-14, Cryout Creations
+ * Copyright 2013-16, Cryout Creations
  * Free to use and abuse under the GPL v3 license.
  */
 
 jQuery(document).ready(function() {
 
+	/* Masonry */
+	if (parabola_settings.masonry==1) {
+		jQuery('body.magazine-layout .content-masonry').masonry({
+			itemSelector: 'article',
+			columnWidth: 'article',
+			percentPosition: true,
+		});
+	}
+
 	/* Standard menu touch support for tablets */
-	var custom_event = ('ontouchstart' in window) ? 'touchstart' : 'click'; // check touch support 
+	var custom_event = ('ontouchstart' in window) ? 'touchstart' : 'click'; // check touch support
 	var ios = /iPhone|iPad|iPod/i.test(navigator.userAgent);
 		jQuery('#access .menu > ul > li a').on('click', function(e){
 			var $link_id = jQuery(this).attr('href');
-			if (jQuery(this).parent().data('clicked') == $link_id) { // second touch 
+			if (jQuery(this).parent().data('clicked') == $link_id) { // second touch
 				jQuery(this).parent().data('clicked', null);
 			}
-			else { // first touch 
+			else { // first touch
 				if (custom_event != 'click' && !ios && (jQuery(this).parent().children('.sub-menu').length >0)) {e.preventDefault();}
 				jQuery(this).parent().data('clicked', $link_id);
 			}
-		}); 
-
-/* Back to top button animation */
-jQuery(function() {
-	jQuery(window).scroll(function() {
-		var x=jQuery(this).scrollTop();
-		 var ver = getInternetExplorerVersion();
-		/* no fade animation (transparency) if IE8 or below */
-		if ( ver > -1 && ver <= 8 ) {
-			if(x != 0) {
-					jQuery('#toTop').show();
-					} else {
-					jQuery('#toTop').hide();
-						}
-		}
-		/* fade animation if not IE8 or below */
-		else {
-		if(x != 0) {
-				jQuery('#toTop').fadeIn(3000);
-			} else {
-				jQuery('#toTop').fadeOut();
-			}
-	}
-	});
-	jQuery('#toTop').click(function() { jQuery('body,html').animate({scrollTop:0},800); });
-});
-
-
-/* Menu animation */
-
-jQuery("#access > div > ul > li").hover(function(){
-	if (jQuery(this).find('ul').length > 0)
-	jQuery("#access > div > ul > li > ul").hide();
-							});
-
-jQuery("#access ul ul").css({display: "none"}); /* Opera Fix */
-jQuery("#access > .menu ul li > a:not(:only-child)").attr("aria-haspopup","true");/* IE10 mobile Fix */
-
-jQuery("#access li").hover(function(){
-	jQuery(this).find('ul:first').stop();
-	jQuery(this).find('ul:first').css({opacity: "0.5"}).css({visibility: "visible",display: "none",overflow:"visible"}).slideDown({duration:200}).animate({"opacity":"1"},{queue:false});
-	},function(){ 
-	jQuery(this).find('ul:first').css({visibility: "visible",display: "block",overflow:"visible"}).slideUp(150);
-							});
-							
-/* Social Icons Animation */
-jQuery(".socialicons").append('<div class="socials-hover"></div>');
-jQuery(".socialicons").hover(function(){
-		jQuery(this).find(".socials-hover").animate({"bottom":"0px"},{queue:false,duration:150});
-	},function() {
-		jQuery(this).find(".socials-hover").animate({"bottom":"30px"},{queue:false,duration:150, complete: function() {
-			jQuery(this).css({bottom:"-30px"});
-			}
 		});
-	} 
-);
 
-/* Detect and apply custom class for Safari */
-if (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1) {
-	jQuery('body').addClass('safari');
-}
+	/* Back to top button animation */
+	jQuery(function() {
+		jQuery(window).scroll(function() {
+			var x=jQuery(this).scrollTop();
+			 var ver = getInternetExplorerVersion();
+			/* no fade animation (transparency) if IE8 or below */
+			if ( ver > -1 && ver <= 8 ) {
+				if(x != 0) {
+						jQuery('#toTop').show();
+						} else {
+						jQuery('#toTop').hide();
+							}
+			}
+			/* fade animation if not IE8 or below */
+			else {
+			if(x != 0) {
+					jQuery('#toTop').fadeIn(3000);
+				} else {
+					jQuery('#toTop').fadeOut();
+				}
+		}
+		});
+		jQuery('#toTop').click(function() { jQuery('body,html').animate({scrollTop:0},800); });
+	});
 
-}); 
+	/* Menu animation */
+	jQuery("#access > div > ul > li").hover(function(){
+		if (jQuery(this).find('ul').length > 0)
+		jQuery("#access > div > ul > li > ul").hide();
+								});
+
+	jQuery("#access ul ul").css({display: "none"}); /* Opera Fix */
+	jQuery("#access > .menu ul li > a:not(:only-child)").attr("aria-haspopup","true");/* IE10 mobile Fix */
+
+	jQuery("#access li").hover(function(){
+		jQuery(this).find('ul:first').stop();
+		jQuery(this).find('ul:first').css({opacity: "0"}).css({visibility: "visible",display: "none",overflow:"visible"}).slideDown({duration:400}).animate({"opacity":"1"},{queue:false});
+		},function(){
+		jQuery(this).find('ul:first').css({visibility: "visible",display: "block",overflow:"visible"}).slideUp(150);
+								});
+
+	/* Social Icons Animation */
+	jQuery(".socialicons").append('<div class="socials-hover"></div>');
+	jQuery(".socialicons").hover(function(){
+			jQuery(this).find(".socials-hover").animate({"bottom":"0"},{queue:false,duration:150});
+		},function() {
+			jQuery(this).find(".socials-hover").animate({"bottom":"100%"},{queue:false,duration:150, complete: function() {
+				jQuery(this).css({bottom:"-100%"});
+				}
+			});
+		}
+	);
+
+	/* Detect and apply custom class for Safari */
+	if (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1) {
+		jQuery('body').addClass('safari');
+	}
+
+});
 /* end document.ready */
 
 
@@ -102,8 +109,21 @@ function equalizeHeights(){
     var max = Math.max(h1,h2,h3);
 	if (h1<max) { jQuery("#primary").height(max); };
 	if (h2<max) { jQuery("#secondary").height(max); };
-
 }
+
+jQuery(window).load(function() {
+	/* Second Masonry, in case elements expand size due to dynamic content */
+	if (parabola_settings.masonry==1) {
+		jQuery('body.magazine-layout .content-masonry').masonry({
+			itemSelector: 'article',
+			columnWidth: 'article',
+			percentPosition: true,
+		});
+	}
+	/* FitVids & mobile menu */
+	if (parabola_settings.mobile==1) parabola_mobilemenu_init();
+	if (parabola_settings.fitvids==1) jQuery(".entry-content").fitVids();
+});
 
 /*!
 * FitVids 1.0

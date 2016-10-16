@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Parabola v0.9.9\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-08-15 18:36+0200\n"
-"PO-Revision-Date: 2013-09-23 21:59+0100\n"
+"PO-Revision-Date: 2015-11-21 17:34+0100\n"
 "Last-Translator: Peter Scheele <p.scheele@xs4all.nl>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -11,7 +11,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-KeywordsList: __;_e;_x\n"
 "X-Poedit-Basepath: .\n"
-"X-Generator: Poedit 1.5.7\n"
+"X-Generator: Poedit 1.8.6\n"
+"Language: nl_NL\n"
 "X-Poedit-SearchPath-0: .\n"
 
 #: 404.php:17
@@ -167,7 +168,7 @@ msgstr "Video"
 #: search.php:18
 #, php-format
 msgid "Search Results for: %s"
-msgstr "Geen resultaat gevonden voor: %s"
+msgstr "Gevonden resultaten voor: %s"
 
 #: search.php:40
 #, php-format
@@ -1497,11 +1498,11 @@ msgstr "Achtergrond menu boven bij muisover"
 
 #: admin/settings.php:866
 msgid "Top Menu Link"
-msgstr ""
+msgstr "Topmenu koppeling"
 
 #: admin/settings.php:867
 msgid "Top Menu Link Hover"
-msgstr ""
+msgstr "Topmenu koppeling (hover)"
 
 #: admin/settings.php:868
 msgid ""
@@ -1517,19 +1518,21 @@ msgstr "Achtergrond inhoud"
 
 #: admin/settings.php:874
 msgid "Page/Post Title"
-msgstr ""
+msgstr "Pagina/Post Titel"
 
 #: admin/settings.php:875
 msgid "Page/Post Title Hover"
-msgstr ""
+msgstr "Toon titel hover"
 
 #: admin/settings.php:876
 msgid "Content Headings"
-msgstr ""
+msgstr "Inhoud koptekst"
 
 #: admin/settings.php:877
 msgid "Content colours apply to post and page areas of the site."
 msgstr ""
+"Inhoud kleur is van toepassing op de berichten en pagina's  onderdelen van "
+"de sit"
 
 #: admin/settings.php:882
 msgid "Titles Color"
@@ -1537,15 +1540,15 @@ msgstr "Kleur titels"
 
 #: admin/settings.php:883
 msgid "Slider Border Color"
-msgstr ""
+msgstr "Slider rand kleur"
 
 #: admin/settings.php:884
 msgid "Slider Caption Color"
-msgstr ""
+msgstr "Slider titel kleur"
 
 #: admin/settings.php:885
 msgid "Slider Caption Background"
-msgstr ""
+msgstr "Slider titel achtergrond"
 
 #: admin/settings.php:889
 msgid "These colours apply to specific areas of the presentation page."
@@ -1553,43 +1556,43 @@ msgstr "Deze kleuren horen bij specifieke gebieden van de presentatiepagina."
 
 #: admin/settings.php:895
 msgid "Sidebars Background"
-msgstr ""
+msgstr "Zijbalk achtergrond"
 
 #: admin/settings.php:896
 msgid "Sidebars Widget Title Background"
-msgstr ""
+msgstr "Zijbalk widget titel achtergrond"
 
 #: admin/settings.php:898
 msgid "Sidebars Text"
-msgstr ""
+msgstr "Zijbalken tekst"
 
 #: admin/settings.php:899
 msgid "Sidebars Widget Title Text"
-msgstr ""
+msgstr "Zijbalken widget titel "
 
 #: admin/settings.php:900
 msgid "These colours apply to the widgets placed in either sidebar."
-msgstr ""
+msgstr "Deze kleuren zijn van toepassing op de widgets in beide zijbalken."
 
 #: admin/settings.php:907
 msgid "Footer Widgets Background"
-msgstr ""
+msgstr "Achtergrond voettekst"
 
 #: admin/settings.php:908
 msgid "Footer Widgets Title Background"
-msgstr ""
+msgstr "Achtergrond voettekst titel"
 
 #: admin/settings.php:910
 msgid "Footer Widget Text"
-msgstr ""
+msgstr "Voettekst widget "
 
 #: admin/settings.php:911
 msgid "Footer Widgets Title Text"
-msgstr ""
+msgstr "Voettekst widget titel"
 
 #: admin/settings.php:912
 msgid "These colours apply to the widgets in the footer area."
-msgstr ""
+msgstr "Deze kleur is van toepassing op de widgets in de voetteksten."
 
 #: admin/settings.php:917
 msgid "General:"
@@ -1597,51 +1600,51 @@ msgstr "Algemeen:"
 
 #: admin/settings.php:918
 msgid "General Links"
-msgstr ""
+msgstr "Algemene snelkoppelingen"
 
 #: admin/settings.php:919
 msgid "General Links Hover"
-msgstr ""
+msgstr "Algemene snelkoppelingen (hover)"
 
 #: admin/settings.php:920
 msgid "Sidebar Widgets:"
-msgstr ""
+msgstr "Widgets zijbalk"
 
 #: admin/settings.php:921
 msgid "Sidebar Widgets Links"
-msgstr ""
+msgstr "Widgets zijbalk koppelingen"
 
 #: admin/settings.php:922
 msgid "Sidebar Widgets Links Hover"
-msgstr ""
+msgstr "Widgets zijbalk koppelingen (hover)"
 
 #: admin/settings.php:923
 msgid "Footer Widgets:"
-msgstr ""
+msgstr "Widgets voettekst"
 
 #: admin/settings.php:924
 msgid "Footer Widgets Links"
-msgstr ""
+msgstr "Widgets voettekst koppelingen"
 
 #: admin/settings.php:925
 msgid "Footer Widgets Links Hover"
-msgstr ""
+msgstr "Widgets voettekst koppelingen (hover)"
 
 #: admin/settings.php:926
 msgid "Footer:"
-msgstr ""
+msgstr "Voettekst"
 
 #: admin/settings.php:927
 msgid "Footer Links"
-msgstr ""
+msgstr "Voettekst koppelingen"
 
 #: admin/settings.php:928
 msgid "Footer Links Hover"
-msgstr ""
+msgstr "Voettekst koppelingen (hover)"
 
 #: admin/settings.php:929
 msgid "Footer colours include the footer menu colours."
-msgstr ""
+msgstr "Voettekst kleur inclusief de voettekst menu kleuren."
 
 #: admin/settings.php:935 admin/settings.php:949
 msgid "Clear"
@@ -1693,6 +1696,8 @@ msgid ""
 "bottom <b>Older Posts</b> and <b>Newer posts</b> links you have a numbered "
 "pagination. "
 msgstr ""
+"Toon genummerde pagina's.   Er worden paginanummers getoond in plaats van "
+"<b>Oudere berichten</b>  en <b>Nieuwere berichten</b>."
 
 #: admin/settings.php:1006
 msgid ""
@@ -1720,32 +1725,34 @@ msgstr "Verberg"
 msgid ""
 "Hide or show bullets next to lists in your content area (posts, pages etc.)."
 msgstr ""
+"Toon of verberg opsommingstekens in de lijst met inhoud (berichten, "
+"pagina's, etc.). "
 
 #: admin/settings.php:1038
 msgid "Hide or show titles on pages."
-msgstr ""
+msgstr "Verberg of toon titels op de pagina's."
 
 #: admin/settings.php:1053
 msgid "Hide or show titles on Categories and Archives."
-msgstr ""
+msgstr "Verberg of toon titels  voor categorieën en archieven."
 
 #: admin/settings.php:1068
 msgid "Hide table borders and background color."
-msgstr ""
+msgstr "Verberg tabel randen en achtergrondkleuren."
 
 #: admin/settings.php:1083
 msgid ""
 "Hide the explanatory text under the comments form (starts with  <i>You may "
 "use these HTML tags and attributes:...</i>)."
-msgstr ""
+msgstr "Verberg de uitleg onder het commentaar formulier."
 
 #: admin/settings.php:1090
 msgid "Hide in posts"
-msgstr ""
+msgstr "Verberg in berichten"
 
 #: admin/settings.php:1090
 msgid "Hide in pages"
-msgstr ""
+msgstr "Verberg op pagina's."
 
 #: admin/settings.php:1090
 msgid "Hide everywhere"
@@ -1756,11 +1763,15 @@ msgid ""
 "Hide the <b>Comments are closed</b> text that by default shows up on pages "
 "or posts with comments disabled."
 msgstr ""
+"Verberg <b>Commentaar gesloten</b> welke standaard verschijnt bij berichten "
+"of pagina's waar commentaar niet toegestaan is."
 
 #: admin/settings.php:1114
 msgid ""
 "Hide the <b>Comments off</b> text next to posts that have comments disabled."
 msgstr ""
+"Verberg <b>Commentaar gesloten</b> bij berichten waar commentaar niet "
+"toegestaan is."
 
 #: admin/settings.php:1130
 msgid ""
@@ -1774,6 +1785,8 @@ msgid ""
 "Hide or show the <strong>Leave a comment</strong> or <strong>x Comments</"
 "strong> next to posts or post excerpts."
 msgstr ""
+"Verberg of toon de  <strong>Laat commentaar achter</strong> bij berichten of "
+"bericht samenvattingen."
 
 #: admin/settings.php:1156
 msgid "Date and time"
@@ -1793,27 +1806,29 @@ msgstr "Verberg beide"
 
 #: admin/settings.php:1164
 msgid "Hide or show the post date and time."
-msgstr ""
+msgstr "Verberg of toon de datum/tijd van het bericht."
 
 #: admin/settings.php:1179
 msgid "Hide or show the post author."
-msgstr ""
+msgstr "Verberg of toon de naam van de auteur van het bericht."
 
 #: admin/settings.php:1194
 msgid "Hide the post category."
-msgstr ""
+msgstr "Verberg de bericht categorie."
 
 #: admin/settings.php:1209
 msgid "Hide the post tags."
-msgstr ""
+msgstr "Verberg de bericht tags."
 
 #: admin/settings.php:1224
 msgid "Hide the 'Bookmark permalink'."
-msgstr ""
+msgstr "Verberg 'Maak een favoriet van de permalink'"
 
 #: admin/settings.php:1239
 msgid "Hide all the post metas. All meta info and meta areas will be hidden."
 msgstr ""
+"Verberg alle meta data van het bericht. Alle informatie en meta vakken "
+"worden verborgen."
 
 #: admin/settings.php:1252 admin/settings.php:1267 admin/settings.php:1283
 msgid "Excerpt"

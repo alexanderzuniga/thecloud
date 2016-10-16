@@ -23,11 +23,11 @@ function parabola_presentation_css() {
 	max-width: <?php echo ($parabola_fpsliderwidth) ?>px ; }
 
 #slider{
-	max-width: <?php echo ($parabola_fpsliderwidth-14) ?>px ;
-	height: <?php echo $parabola_fpsliderheight-14 ?>px ;
-<?php if ($parabola_fpsliderbordercolor): ?> border:7px solid <?php echo $parabola_fpsliderbordercolor; ?>; <?php endif; ?> }
+	max-width: <?php echo ($parabola_fpsliderwidth) ?>px ;
+	height: <?php echo $parabola_fpsliderheight ?>px ;
+<?php if ($parabola_fpsliderbordercolor): ?> border:<?php echo $parabola_fpborderwidth ?>px solid <?php echo $parabola_fpsliderbordercolor; ?>; <?php endif; ?> }
 
-#front-text1 h1, #front-text2 h1{
+#front-text1, #front-text2 {
 	color: <?php echo $parabola_fronttitlecolor; ?>; }
 
 #front-columns > div {
@@ -39,9 +39,14 @@ function parabola_presentation_css() {
     case 4: echo "23.5"; break;
 	} ?>%; }
 
-#front-columns > div#column<?php echo $parabola_nrcolumns; ?> { margin-right: 0; }
+#front-columns > div.ppcolumn:nth-child(<?php echo $parabola_nrcolumns; ?>n) { margin-<?php echo ( is_rtl() ? 'left' : 'right' ) ?>: 0; }
+#front-columns > div.ppcolumn:nth-child(<?php echo $parabola_nrcolumns; ?>n+1) { clear: <?php echo ( is_rtl() ? 'right' : 'left' ) ?>; }
 
-.column-image img {	height:<?php echo ($parabola_colimageheight) ?>px;}
+
+
+.column-image { padding: <?php echo $parabola_fpborderwidth ?>px; }
+.column-image h3 {margin-bottom: <?php echo $parabola_fpborderwidth ?>px; }
+.column-image img {	max-height:<?php echo ($parabola_colimageheight) ?>px;}
 
 .nivo-caption { background-color: rgb(<?php echo cryout_hex2rgb($parabola_fpslidercaptionbg); ?>); background-color: rgba(<?php echo cryout_hex2rgb($parabola_fpslidercaptionbg); ?>,0.7); }
 .nivo-caption, .nivo-caption a { color: <?php echo $parabola_fpslidercaptioncolor; ?>; }
@@ -55,7 +60,7 @@ function parabola_presentation_css() {
 .slider-numbers .nivo-controlNav a:hover { color: <?php echo $parabola_menucolorbgdefault; ?>;  background-color:<?php echo $parabola_contentcolorbg; ?> }
 .slider-numbers .nivo-controlNav a.active { color:<?php echo $parabola_accentcolora; ?>;}
 
-.column-image h3{ color: <?php echo $parabola_contentcolortxt; ?>; background-color: rgb(<?php echo cryout_hex2rgb($parabola_contentcolorbg); ?>); background-color: rgba(<?php echo cryout_hex2rgb($parabola_contentcolorbg); ?>,0.6); }
+.column-image h3{ color: <?php echo $parabola_contentcolortxt; ?>; background-color: rgb(<?php echo cryout_hex2rgb($parabola_contentcolorbg); ?>); }
 .columnmore { background-color: <?php echo $parabola_backcolormain; ?>; }
 .columnmore:before { border-bottom-color: <?php echo $parabola_backcolormain;?>; }
 #front-columns h3.column-header-noimage { background: <?php echo $parabola_contentcolorbg;?>; }
