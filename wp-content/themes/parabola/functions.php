@@ -22,5 +22,5 @@ require_once( get_template_directory() . "/includes/theme-frontpage.php" );   //
 require_once( get_template_directory() . "/includes/theme-comments.php" );    // Comment functions
 require_once( get_template_directory() . "/includes/theme-functions.php" );   // Misc functions
 require_once( get_template_directory() . "/includes/theme-hooks.php" );       // Hooks
-require_once( get_template_directory() . "/includes/widgets.php" );           // Theme Widgets
+#require_once( get_template_directory() . "/includes/widgets.php" );           // Theme Widgets
 require_once( get_template_directory() . "/includes/tgm.php" );               // TGM-PA
