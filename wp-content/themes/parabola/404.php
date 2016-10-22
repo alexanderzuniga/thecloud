@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <?php
 /**
  * The template for displaying 404 pages (Not Found).
@@ -33,6 +32,3 @@ get_header(); ?>
 	</script>
 
 <?php get_footer(); ?>
-=======
-//something stpuid
->>>>>>> parent of 71683e2... pushing to new server
