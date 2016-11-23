@@ -1,0 +1,41 @@
+PHP PAY YOUR DEVELOPER YOU CHEAP BASTARD![15-Jul-2016 19:06:23 UTC] PHP Notice:  Undefined index: active in /nas/content/live/thecloud/wp-content/plugins/wpe-sandboxes/admin_page.php on line 86
+[15-Jul-2016 19:07:54 UTC] PHP Notice:  Undefined index: active in /nas/content/live/thecloud/wp-content/plugins/wpe-sandboxes/admin_page.php on line 86
+[15-Jul-2016 19:12:52 UTC] PHP Notice:  Undefined index: wpe_widget_powered_by-submit in /nas/content/live/thecloud/wp-content/mu-plugins/wpengine-common/plugin.php on line 97
+[15-Jul-2016 19:12:55 UTC] PHP Notice:  Undefined index: wpe_widget_powered_by-submit in /nas/content/live/thecloud/wp-content/mu-plugins/wpengine-common/plugin.php on line 97
+[15-Jul-2016 19:12:56 UTC] PHP Notice:  Undefined index: wpe_widget_powered_by-submit in /nas/content/live/thecloud/wp-content/mu-plugins/wpengine-common/plugin.php on line 97
+[15-Jul-2016 19:28:25 UTC] PHP Warning:  file_get_contents(/nas/content/live/thecloud/*.php): failed to open stream: No such file or directory in /nas/content/live/thecloud/wp-content/plugins/wpe-sandboxes/breaks/single/05-my-first-break.php on line 21
+[15-Jul-2016 19:28:25 UTC] PHP Warning:  preg_replace(): Empty regular expression in /nas/content/live/thecloud/wp-content/plugins/wpe-sandboxes/breaks/single/05-my-first-break.php on line 32
+[15-Jul-2016 19:28:25 UTC] PHP Warning:  _wpe_old_file_put_contents(): Filename cannot be empty in /opt/nas/www/common/production/php_prevent_flock.php on line 22
+[15-Jul-2016 19:50:13 UTC] PHP Notice:  Undefined index: active in /nas/content/live/thecloud/wp-content/plugins/wpe-sandboxes/admin_page.php on line 86
+[28-Jul-2016 19:32:26 UTC] PHP Notice:  Undefined offset: 4 in phar:///usr/local/bin/wp/php/WP_CLI/DocParser.php on line 124
+[29-Jul-2016 19:00:23 UTC] WPE PHP Compatibility: startScan: 1
+[29-Jul-2016 19:00:23 UTC] WPE PHP Compatibility: timeout: 60
+[29-Jul-2016 19:00:23 UTC] WPE PHP Compatibility: lock: 1
+[29-Jul-2016 19:00:23 UTC] WPE PHP Compatibility: scan status: 
+[29-Jul-2016 19:00:23 UTC] WPE PHP Compatibility: Generating directory list.
+[29-Jul-2016 19:00:23 UTC] WPE PHP Compatibility: An update exists for: Akismet
+[29-Jul-2016 19:00:23 UTC] WPE PHP Compatibility: 10 plugins left to process.
+[29-Jul-2016 19:00:23 UTC] WPE PHP Compatibility: Processing: Akismet
+[29-Jul-2016 19:00:23 UTC] WPE PHP Compatibility: Attempted scan count: 1
+[29-Jul-2016 19:00:25 UTC] WPE PHP Compatibility: Processing: Contact Form 7
+[29-Jul-2016 19:00:25 UTC] WPE PHP Compatibility: Attempted scan count: 1
+[29-Jul-2016 19:00:30 UTC] WPE PHP Compatibility: Processing: Fruitful
+[29-Jul-2016 19:00:30 UTC] WPE PHP Compatibility: Attempted scan count: 1
+[29-Jul-2016 19:00:45 UTC] WPE PHP Compatibility: Processing: Fruitful
+[29-Jul-2016 19:00:45 UTC] WPE PHP Compatibility: Attempted scan count: 1
+[29-Jul-2016 19:00:59 UTC] WPE PHP Compatibility: Processing: Hello Dolly
+[29-Jul-2016 19:00:59 UTC] WPE PHP Compatibility: Attempted scan count: 1
+[29-Jul-2016 19:00:59 UTC] WPE PHP Compatibility: Processing: Parabola
+[29-Jul-2016 19:00:59 UTC] WPE PHP Compatibility: Attempted scan count: 1
+[29-Jul-2016 19:01:12 UTC] WPE PHP Compatibility: Processing: Twenty Fifteen
+[29-Jul-2016 19:01:12 UTC] WPE PHP Compatibility: Attempted scan count: 1
+[29-Jul-2016 19:01:13 UTC] WPE PHP Compatibility: Processing: Twenty Fourteen
+[29-Jul-2016 19:01:13 UTC] WPE PHP Compatibility: Attempted scan count: 1
+[29-Jul-2016 19:01:14 UTC] WPE PHP Compatibility: Processing: Twenty Sixteen
+[29-Jul-2016 19:01:14 UTC] WPE PHP Compatibility: Attempted scan count: 1
+[29-Jul-2016 19:01:14 UTC] WPE PHP Compatibility: Processing: WPE Training Sandboxes
+[29-Jul-2016 19:01:14 UTC] WPE PHP Compatibility: Attempted scan count: 1
+[29-Jul-2016 19:01:15 UTC] WPE PHP Compatibility: Scan finished.
+[11-Aug-2016 14:20:15 UTC] PHP Notice:  Undefined index: SERVER_NAME in /nas/content/live/thecloud/wp-includes/pluggable.php on line 323
+[31-Aug-2016 13:02:00 UTC] PHP Strict Standards:  call_user_func_array() expects parameter 1 to be a valid callback, non-static method Wpe_Ajax::deploy_staging() should not be called statically in /nas/content/live/thecloud/wp-content/mu-plugins/wpengine-common/ajax.php on line 11
+[19-Sep-2016 03:53:28 UTC] PHP Warning:  fopen(/nas/content/live/thecloud/.htaccess): failed to open stream: Permission denied in /nas/content/live/thecloud/wp-admin/includes/misc.php on line 123
