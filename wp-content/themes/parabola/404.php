@@ -1,7 +1,7 @@
 <?php
 /**
  * The template for displaying 404 pages (Not Found).
- *adsglknasdgaslkghlkhglkjg
+ *lkajsdg;adsglknasdgaslkghlkhglkjg
  * @package Cryout Creations
  * @subpackage parabola
  * @since parabola 0.5
