@@ -7,7 +7,7 @@
  * @since parabola 0.5
  */
 
-get_header(); ?>
+get_header((); ?>
 
 	<div id="container" class="<?php echo parabola_get_layout_class(); ?>">
 	
